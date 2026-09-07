@@ -360,10 +360,14 @@ View it here: https://mirage54321.github.io/RoboLens/
 
 
 ## Devlog #21 ->
-Updates!!! Basically, I've been checking to see how many users and views I have. I have google analytics on my project to keep an eye on it. Right now I have ___ users and __ views. Which honestly, I am pretty dang happy about. 
+Updates!!! Basically, I've been checking to see how many users and views I have. I have google analytics on my project to keep an eye on it. Right now I have 52 users and 163 views. Which honestly, I am pretty dang happy about. 
 (1) I haven't really been advertising
 (2) I literally thought it was gonna be like 20 views
 Woop woop! Okay, now on these past few days I have been working on getting as many hours as possible. I don't have a personal computer so I am really aiming for literally any of the laptops. 
-Now, programatically I have been working on __________.
+Now, programatically I have been working on removing the 3 burst messages for iPhone (it wouldn't compact itself on the Apple homescreen).
+FYI: 90% of the time for this was spent removing the 3 burst messages for iPhone and writing Ship #2... so you better be ready for Ship 2!
 
 View it here: https://mirage54321.github.io/RoboLens/
+
+![alt text](image-39.png)
+

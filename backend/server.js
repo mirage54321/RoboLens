@@ -618,19 +618,19 @@ async function sendPushBurst(sub, basePayload, tagSeed) {
     return sendSingleNotification(sub, payload);
   }
 
-  let deliveredAtLeastOnce = false;
-  for (let i = 0; i < PUSH_BURST_COUNT; i++) {
-    const delivered = await sendSingleNotification(sub, payload);
-    if (!delivered) {
+  // let deliveredAtLeastOnce = false;
+  // for (let i = 0; i < PUSH_BURST_COUNT; i++) {
+  //   const delivered = await sendSingleNotification(sub, payload);
+  //   if (!delivered) {
 
-      break;
-    }
-    deliveredAtLeastOnce = true;
-    if (i < PUSH_BURST_COUNT - 1) {
-      await sleep(PUSH_BURST_INTERVAL_MS);
-    }
-  }
-  return deliveredAtLeastOnce;
+  //     break;
+  //   }
+  //   deliveredAtLeastOnce = true;
+  //   if (i < PUSH_BURST_COUNT - 1) {
+  //     await sleep(PUSH_BURST_INTERVAL_MS);
+  //   }
+  // }
+  // return deliveredAtLeastOnce;
 }
 
 if (!MONGODB_URI) {
