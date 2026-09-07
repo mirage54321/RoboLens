@@ -352,6 +352,9 @@ View it here: https://mirage54321.github.io/RoboLens/
 
 ## Devlog #20 ->
 Notifications are working again! Basically, the rebuilding of Render helped fix the issue which is kind of ragebait. I'm getting a little nervous though because I wonder what happens if someone doesn't reopen the bookmark (because that is how it resets). Would they still get the messages? Will it update automatically?
+Overall, it works great. I just worry there may be an error that arises (that is a risk with any project honestly). 
+
+View it here: https://mirage54321.github.io/RoboLens/
 
 ![alt text](image-38.png)
 
