@@ -323,7 +323,6 @@ Current problems / what's next:
 ![alt text](image-36.png)
 
 
-
 ## Devlog #18 ->
 I know I just committed a bunch the last few days. I guess I realized there is only a few days left and I found how to be way more efficent in getting hours. If I just keep this open and something else on another computer and work with them kinda being different windows then I get a lot more time because the switching of windows in the same computer made me keep forgetting to come back and work on the project (and I'm guessing was cutting the time too).
 Anywho! The most recent changes I have made is removing the ? mark button. I think I was going for a like "about me" thing but I think it was a little redundant and kind of unneccessary to say the least. I added a report button instead (it's just in the home page). I got this idea from lovable which was something I worked with during my internship. I highkey have been working so much on this project (you can see by all my hours) that I didn't want to connect it to the backend. It is just a popout that takes you to an gmail link and you can click send. Maybe if I run out of ideas I can add it as a backend.
@@ -333,6 +332,9 @@ I had a conversation with one of my friends that changed my thoughts on AI. I th
 My issues to work on are:
 - Low MongoDB storage for free account
 - Professionalizing (now just looking back over and seeing if there is anything I wanna fix before putting on cheif delphi)
+
+View it here: https://mirage54321.github.io/RoboLens/
+
 
 ![alt text](<Screenshot 2026-09-05 232913.png>)
 ![alt text](<Screenshot 2026-09-05 232925.png>)
@@ -345,3 +347,5 @@ Updates!!! Basically, I've been checking to see how many users and views I have.
 (2) I literally thought it was gonna be like 20 views
 Woop woop! Okay, now on these past few days I have been working on getting as many hours as possible. I don't have a personal computer so I am really aiming for literally any of the laptops. 
 Now, programatically I have been working on __________.
+
+View it here: https://mirage54321.github.io/RoboLens/
