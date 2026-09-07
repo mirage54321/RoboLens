@@ -331,15 +331,15 @@ View it here: https://mirage54321.github.io/RoboLens/
 ![alt text](image-37.png)
 
 
+
 ## Devlog #19 ->
 I know I just committed a bunch the last few days. I guess I realized there is only a few days left and I found how to be way more efficent in getting hours. If I just keep this open and something else on another computer and work with them kinda being different windows then I get a lot more time because the switching of windows in the same computer made me keep forgetting to come back and work on the project (and I'm guessing was cutting the time too).
 Anywho! The most recent changes I have made is removing the ? mark button. I think I was going for a like "about me" thing but I think it was a little redundant and kind of unneccessary to say the least. I added a report button instead (it's just in the home page). I got this idea from lovable which was something I worked with during my internship. I highkey have been working so much on this project (you can see by all my hours) that I didn't want to connect it to the backend. It is just a popout that takes you to an gmail link and you can click send. Maybe if I run out of ideas I can add it as a backend.
 Now, if I am going to be so honest. I have worked a lot on this project and I want to ship but I also want to just crank out some more hours. I'm extremely proud of this project and I need to get it out to the world so that I can get some users!
-I had a conversation with one of my friends that changed my thoughts on AI. I think AI has a negative connotation, and I agree that it takes away the problem solving and skills. However, they said something about AI being helpful for doing things you already know how to do but a lot faster. I was just thinking about that and so I might rely on AI a little bit more (and by that I mean a little more) in the coming days.
 
 My issues to work on are:
 - Low MongoDB storage for free account
-- Professionalizing (now just looking back over and seeing if there is anything I wanna fix before putting on cheif delphi)
+- Professionalizing (now just looking back over and seeing if there is anything I wanna fix before putting on chief delphi)
 
 View it here: https://mirage54321.github.io/RoboLens/
 
@@ -349,7 +349,14 @@ View it here: https://mirage54321.github.io/RoboLens/
 ![alt text](<Screenshot 2026-09-05 232942.png>)
 
 
+
 ## Devlog #20 ->
+Notifications are working again! Basically, the rebuilding of Render helped fix the issue which is kind of ragebait. I'm getting a little nervous though because I wonder what happens if someone doesn't reopen the bookmark (because that is how it resets). Would they still get the messages? Will it update automatically?
+
+![alt text](image-38.png)
+
+
+## Devlog #21 ->
 Updates!!! Basically, I've been checking to see how many users and views I have. I have google analytics on my project to keep an eye on it. Right now I have ___ users and __ views. Which honestly, I am pretty dang happy about. 
 (1) I haven't really been advertising
 (2) I literally thought it was gonna be like 20 views
