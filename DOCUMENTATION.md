@@ -371,3 +371,28 @@ View it here: https://mirage54321.github.io/RoboLens/
 
 ![alt text](image-39.png)
 
+## Ship #2 - > 
+What did I make?
+
+Since Ship #1, RoboLens grew from one AI scanner into four connected tools. I added a rules checker that reads the actual FRC game manual (2024–2026) alongside your robot photo so it's grounded in real rules instead of guessing. I built out a full shared battery tracker. I added a guided camera that walks you through lighting/tilt/framing and auto-captures once the angle looks right. And the biggest addition: a Team Stats & Match Center with four tabs (My Team, Stats, Events, Sim) pulling live data from The Blue Alliance and the FRC Events API, including a season-wide "World Rating," a matchup simulator with win probabilities, and bookmarking teams to get real push notifications before their matches.
+
+I also spent a lot of time on stuff that doesn't show up as a "feature" but makes the app actually usable: a queue + exponential backoff + retry system so the shared free-tier Gemini key doesn't randomly fail scans under load, a report button that feeds recurring AI mistakes back into future scans, offline detection so scans fail fast instead of hanging, and a new instant-loading splash screen.
+
+What was challenging for me?
+
+The AI usage limits were the most persistent problem. Everyone shares one free-tier Gemini key, so scans would fail with no clear pattern whenever enough people hit it at once. I fixed it in stages: first a queue limiting in-flight requests, then automatic retries with backoff (and respecting the retry-after header when Gemini gave one), then finally surfacing that retry status to the user ("High demand. Retrying (2/3)...") instead of just showing a dead spinner.
+
+The guided camera and push notifications both turned into whole rabbit holes of browser-specific pain (iOS Safari blocking camera/notification permissions unless triggered by a direct tap, no live frame streaming on web so I had to build a custom JS-interop layer from scratch, and push not working on iOS at all unless the site's added to the home screen firs)t.
+
+My favorite bug story: the Match Center's Events tab would spin forever with zero errors. I burned time adding timeouts and retries that did nothing before realizing the real issue. The spinner wasn't stuck waiting on the network, it was stuck because nothing ever tried.
+
+What am I the most proud of?
+
+Going from a single-purpose AI scanner to four genuinely useful, connected tools without the codebase turning into spaghetti. I'm also proud that scans now degrade gracefully under load instead of just failing, and that notifications work reliably even though I had zero experience with service workers or VAPID keys before this. And honestly, just sticking with it. 21 devlogs and three months of real iteration based on actual user feedback instead of giving up.
+
+What should people know so they can test your project?
+
+Live app: https://mirage54321.github.io/RoboLens/
+You can log in as a guest for team 4388 to browse batteries without needing an account.
+Push notifications currently work reliably on desktop browsers and Android (iOS Safari requires the site to be added to your home screen as a bookmark). You can test this by logging into -4388 (Yes, a negative. I needed a number that wouldn't have a real team).
+The AI scan/rules tools need a robot photo to test against; if you don't have one handy, any well-lit photo of mechanical/electrical components will still show you how the flow works.
