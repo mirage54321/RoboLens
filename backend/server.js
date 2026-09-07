@@ -614,9 +614,9 @@ async function sendPushBurst(sub, basePayload, tagSeed) {
     ...(isIos ? {} : { vibrate: PUSH_VIBRATE_PATTERN }),
   });
 
-  if (!isIos) {
+  // if (!isIos) {
     return sendSingleNotification(sub, payload);
-  }
+  // }
 
   // let deliveredAtLeastOnce = false;
   // for (let i = 0; i < PUSH_BURST_COUNT; i++) {
