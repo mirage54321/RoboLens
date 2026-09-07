@@ -322,8 +322,16 @@ Current problems / what's next:
 
 ![alt text](image-36.png)
 
-
 ## Devlog #18 ->
+Okay, super short devlog just to explain what I am doing. Basically all my hours are spent on fixing the notifications. It is super annoying right now because I am trying to finalize my project and the notifications randomly stop working. I tried clearing out mongoDB and checking on my cron-job and those seem to be working just fine. I'm not sure what to do. I pushed the hours up (for the practice day so I can check it earlier) and redeployed with Render. I shall see tomorrow if it works.
+
+View it here: https://mirage54321.github.io/RoboLens/
+
+
+![alt text](image-37.png)
+
+
+## Devlog #19 ->
 I know I just committed a bunch the last few days. I guess I realized there is only a few days left and I found how to be way more efficent in getting hours. If I just keep this open and something else on another computer and work with them kinda being different windows then I get a lot more time because the switching of windows in the same computer made me keep forgetting to come back and work on the project (and I'm guessing was cutting the time too).
 Anywho! The most recent changes I have made is removing the ? mark button. I think I was going for a like "about me" thing but I think it was a little redundant and kind of unneccessary to say the least. I added a report button instead (it's just in the home page). I got this idea from lovable which was something I worked with during my internship. I highkey have been working so much on this project (you can see by all my hours) that I didn't want to connect it to the backend. It is just a popout that takes you to an gmail link and you can click send. Maybe if I run out of ideas I can add it as a backend.
 Now, if I am going to be so honest. I have worked a lot on this project and I want to ship but I also want to just crank out some more hours. I'm extremely proud of this project and I need to get it out to the world so that I can get some users!
@@ -341,7 +349,7 @@ View it here: https://mirage54321.github.io/RoboLens/
 ![alt text](<Screenshot 2026-09-05 232942.png>)
 
 
-## Devlog #19 ->
+## Devlog #20 ->
 Updates!!! Basically, I've been checking to see how many users and views I have. I have google analytics on my project to keep an eye on it. Right now I have ___ users and __ views. Which honestly, I am pretty dang happy about. 
 (1) I haven't really been advertising
 (2) I literally thought it was gonna be like 20 views
