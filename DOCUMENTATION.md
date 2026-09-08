@@ -18,7 +18,7 @@ I am so proud of how my project is looking so far! I plan to add more tools like
 
 
 ## Ship #1 - > 
-Anonymous feedback from other users at this point:
+### Anonymous feedback from other users at this point:
 - When I tried uploading a photo of my team's bot, I got an error saying that the scan failed due to an exceeding of the quota from Google API's. It seems that the Gemini implementation isn't working properly due to an influx of people testing. Perhaps you could try to host some AI locally on the website itself? Not sure how that'd work out, though.
 - Your project is really nice! Great job! Your project is very unique and something I haven't seen before. I also think that you did a great job in putting a lot of effort in developing the features. The usability was great and this type of project is very useful for robotics teams. Storytelling, however, could be improved. You could talk about challenges you faced and what features you are curious about for the future.
 - first of all FRC MENTIONNED AYYY so so so cool and i understand how useful this could be so im super impressed the rule checking feature is so sick honestly would love to try it out but our robot is not present so i cant :( nice look to the app it looks clean and seems to run smoothly so keep up this amazing work :3 !!
@@ -396,3 +396,18 @@ Live app: https://mirage54321.github.io/RoboLens/
 You can log in as a guest for team 4388 to browse batteries without needing an account.
 Push notifications currently work reliably on desktop browsers and Android (iOS Safari requires the site to be added to your home screen as a bookmark). You can test this by logging into -4388 (Yes, a negative. I needed a number that wouldn't have a real team).
 The AI scan/rules tools need a robot photo to test against; if you don't have one handy, any well-lit photo of mechanical/electrical components will still show you how the flow works.
+
+### Anonymous feedback from other users at this point:
+Cool project! One thing: you should add cursor:pointer to every buttons of your app, because without it users could get lost. Also I checked out your repo, and there's a LOT of picture stored in the root directory of your project. You should absolutly put them in a dedicated folder like /assets. Apart from that, cool idea!
+Looks very useful! My school does Vex, and at least there the inspection lines take forever, so this seems like a really useful idea. One issue with the concept I have however is that the really obvious things I think the AI would be good at picking up on are the things a person can easily do at a glance, more nuanced things that you might not be able to get at a quick glance, like a loose screw buried deep in the drivetrain, probably also couldn't be gotten by the AI. I don't have an FRC bot lying around to test it on, though, so I could be wrong. Really cool idea though!
+Takes some time to load, would be great if it is a bit faster. App is a bit confusing to use. Keep up the great work.
+Nice project, actually useful! Unfortunately I'm not part of the select few that take part in this program so this isn't for me :( Besides that the website doesn't seen to have any issues, everything works and the animations are nice. 
+I love the design, the oppertunities, and the looks and just the thought of getting this as an app is also crazy and needs a lot of talent to get it as an app
+I can see that you have put a lot of time and effort into making this really cool project. I think that you have made something very useful and something that i will probably use the next time I am going to make like a robot. I also like the color theme that you have chosen. I think that you could have made the loadin page a like bit better looking as it looks quite plain right now. 
+The image processing is good, but the loop crashes if the camera disconnects. Still, a great project!
+I really appreciate you you mentioned it grew from a simple AI scanner into something an actual robotics team could use which is a very big implementation. The rules checker, shared battery tracking, live match data, and notifications all solves the real problems, and the README does a great job explaining how everything works.keep going
+if i was in robotics (im planning to do so) this tool will be at the top of my list. good job. 
+The overall UI looks really clean and polished. Even though I’m not very familiar with this field, the app felt very intuitive and easy to use. I also really appreciated that you’re hosting the live demo yourself, which made it super convenient to try out. In particular, the battery tracking feature really stood out to me!
+Awesome work building such a practical FRC assistant! The AI retry system and match center are brilliant. Keep polishing the iOS notification experience!
+I do not have an image of a robot to actual test but I did use a dummy image and it was able to tell me that the image did not contain a robot. All over functionality looked solid.
+
