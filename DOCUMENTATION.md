@@ -11,7 +11,7 @@ Overall, working with flutter to program a UI wasn't too bad. I have always been
 I've had the most difficulties with the implementation of the AI. At first, I started with an Ollama model. However, it was very slow so it would timeout before sending in anything that it had noticed in the photo. I then found that Google lets you use a free Gemini model so I got an API for that and finally added that. The new problem I faced was that everytime I tried to publish my app as a github page, the API key would turn off because the key wasn't safe. I finally learned that the key needs to be stored in a backend in order to function so I utilized Render.
 I am so proud of how my project is looking so far! I plan to add more tools like a rules scanner. 
 
-![alt text](image.png) ![alt text](image-1.png)
+![alt text](photos/image.png) ![alt text](photos/image-1.png)
 
 
 
@@ -38,16 +38,16 @@ I am so proud of how my project is looking so far! I plan to add more tools like
 
 ## Devlog #2 ->
 Now that I've finished the foundation of my project, I can keep adding tools! On my last ship, I realized I should keep more documentation. So be ready for more devlogs going forward!
-To get a little more comfortable with what I'm doing, I decided to add another AI scanning tool that I have been thinking about: a rules checker. The general scanner already looked for physical problems like wiring and cracks, but I wanted something that could actually check a robot against the official FRC rulebook. So I added the actual PDFs of past FRC game manuals (2024, 2025, and 2026) and let the user pick which season's rules to check against. That PDF gets fed into the AI alongside the photo, so instead of relying on whatever general FRC knowledge the model already has (which could be outdated or made up), it's reading the exact rulebook for that year while it looks at the image.
-Getting the PDF into the AI request in the first place took some figuring out. I had to load it from the app's assets, converting it into a format the API would actually accept, and making sure it got sent alongside the image without breaking anything. Once it worked though, the difference was noticeable (the AI's answers started actually referencing real rules instead of guesses).
+To get a little more comfortable with what I'm doing, I decided to add another AI scanning tool that I have been thinking about: a rules checker. The general scanner already looked for physical problems like wiring and cracks, but I wanted something that could actually check a robot against the official FRC rulebook. So I added the actual PDFs of past FRC game manuals (2024, 2025, and 2026) and let the user pick which season's rules to check against. That PDF gets fed into the AI alongside the photo, so instead of relying on whatever general FRC knowledge the model already has (which could be outdated or made up), it's reading the exact rulebook for that year while it looks at the photos/image.
+Getting the PDF into the AI request in the first place took some figuring out. I had to load it from the app's assets, converting it into a format the API would actually accept, and making sure it got sent alongside the photos/image without breaking anything. Once it worked though, the difference was noticeable (the AI's answers started actually referencing real rules instead of guesses).
 The bigger challenge was AI usage limits. Not "too many messages" though. Instead, it was more that other people using the same free model at the same time meant my requests were competing with everyone else's. Half the time a scan would go through fine, and the other half it just wouldn't, with no real pattern I could find.
 To fix this I... haven't yet, honestly. Still an open problem :(. Hoping to hear from you guys for some ideas!
 I'm a little nervous because AI kind of has a negative connotation in FRC. To address that issue, I'm planning to make the whole app not centered around AI so I'll be adding more tools.
 Excited to keep going though, because I just started programming my new idea: adding a battery tracker!
 View it here: https://mirage54321.github.io/RoboLens/
 
-![alt text](image-2.png)
-![alt text](image-5.png)
+![alt text](photos/image-2.png)
+![alt text](photos/image-5.png)
 
 
 
@@ -67,9 +67,9 @@ List of things to work on:
 View it here: https://mirage54321.github.io/RoboLens/
   
 
-![alt text](image-6.png)
-![alt text](image-7.png)
-![alt text](image-8.png)
+![alt text](photos/image-6.png)
+![alt text](photos/image-7.png)
+![alt text](photos/image-8.png)
 
 
 
@@ -88,9 +88,9 @@ Now my new top things to work on are:
 View it here: https://mirage54321.github.io/RoboLens/
 P.S. If you are trying things out you can sign in as a guest for 4388 and see my teams batteries
 
-![alt text](image-9.png)
-![alt text](image-10.png)
-![alt text](image-11.png)
+![alt text](photos/image-9.png)
+![alt text](photos/image-10.png)
+![alt text](photos/image-11.png)
 
 
 
@@ -107,8 +107,8 @@ List of current tasks:
 View it here: https://mirage54321.github.io/RoboLens/
 
 
-![alt text](image-12.png)
-![alt text](image-13.png)
+![alt text](photos/image-12.png)
+![alt text](photos/image-13.png)
 
 
 ## Devlog #6 ->
@@ -126,10 +126,10 @@ Now I am working on the flutter comments ("too dark", "focus", etc.) because rig
 
 View it here: https://mirage54321.github.io/RoboLens/
 
-![alt text](image-17.png)
-![alt text](image-14.png)
-![alt text](image-15.png)
-![alt text](image-16.png)
+![alt text](photos/image-17.png)
+![alt text](photos/image-14.png)
+![alt text](photos/image-15.png)
+![alt text](photos/image-16.png)
 
 
 
@@ -143,8 +143,8 @@ With all of that sorted, the guided camera now works consistently across native 
 
 View it here: https://mirage54321.github.io/RoboLens/
 
-![alt text](image-18.png)
-![alt text](image-19.png)
+![alt text](photos/image-18.png)
+![alt text](photos/image-19.png)
 
 ## Devlog #8 ->
 Part 2/2 (part 2 of this devlog)
@@ -160,7 +160,7 @@ Things to work on:
 
 View it here: https://mirage54321.github.io/RoboLens/
 
-![alt text](image-20.png)
+![alt text](photos/image-20.png)
 
 
 ## Devlog #9 ->
@@ -172,8 +172,8 @@ P.S. I started making the fourth widget before the report button then switched t
 
 View it here: https://mirage54321.github.io/RoboLens/
 
-![alt text](image-21.png)
-![alt text](image-22.png)
+![alt text](photos/image-21.png)
+![alt text](photos/image-22.png)
 
 ## Devlog #10 ->
 Part 1 of 5
@@ -185,9 +185,9 @@ Short devlog, I know, but wait till you see what devlog #11 turned into.
 
 View it here: https://mirage54321.github.io/RoboLens/
 
-![alt text](image-23.png)
-![alt text](image-24.png)
-![alt text](image-25.png)
+![alt text](photos/image-23.png)
+![alt text](photos/image-24.png)
+![alt text](photos/image-25.png)
 
 ## Devlog #11 ->
 Part 2 of 5
@@ -232,10 +232,10 @@ Devlog #13 is basically a straight continuation of this one, mostly bug stories 
 
 View it here: https://mirage54321.github.io/RoboLens/
 
-![alt text](image-26.png)
-![alt text](image-27.png)
-![alt text](image-28.png)
-![alt text](image-29.png)
+![alt text](photos/image-26.png)
+![alt text](photos/image-27.png)
+![alt text](photos/image-28.png)
+![alt text](photos/image-29.png)
 
 
 
@@ -254,10 +254,10 @@ Genuinely didn't expect the 4th app to take this many devlogs but here we are. O
 
 View it here: https://mirage54321.github.io/RoboLens/
 
-![alt text](<Screenshot 2026-08-30 223221.png>)
-![alt text](<Screenshot 2026-08-30 223246.png>)r
-![alt text](<Screenshot 2026-08-30 223325.png>)
-![alt text](<Screenshot 2026-08-30 223335.png>)
+![alt text](<photos/Screenshot 2026-08-30 223221.png>)
+![alt text](<photos/Screenshot 2026-08-30 223246.png>)r
+![alt text](<photos/Screenshot 2026-08-30 223325.png>)
+![alt text](<photos/Screenshot 2026-08-30 223335.png>)
 
 
 ## Devlog #14 ->
@@ -266,7 +266,7 @@ Part 5 of 5
 Finally! This final devlog is about the small tweaks I made in the app.
 
 1) I made it have a new photo
-Small one, just swapped out one of the app's images for something more current since the old one was from way back in devlog #1 and didn't really represent what the app looks like anymore. Nothing technical here, just housekeeping.
+Small one, just swapped out one of the app's photos/images for something more current since the old one was from way back in devlog #1 and didn't really represent what the app looks like anymore. Nothing technical here, just housekeeping.
 
 2) It kinda works offline
 I say "kinda" because this isn't a real offline mode where you can browse cached data with no internet, it's more like the app now knows when it's offline and fails fast instead of just hanging. Basically, I added a ConnectivityCheck helper that on web reads navigator.onLine (a free, instant, synchronous browser check for whether the device has a network interface up) so if you're in airplane mode or your wifi is off, the AI scan screens can immediately say "can't use this when offline" instead of sitting there for a full request timeout before failing. On native platforms there's no real equivalent without pulling in a whole new plugin like connectivity_plus, so I just made the stub always report "online" there — an actually-offline phone still gets caught by the AI request's own timeout/retry handling, just without the instant fail I get on web.
@@ -289,9 +289,9 @@ Future ideas: team tracker, public chat for teams, judging/interview prep tool, 
 
 View it here: https://mirage54321.github.io/RoboLens/
 
-![alt text](image-30.png)
-![alt text](image-31.png)
-![alt text](image-32.png)
+![alt text](photos/image-30.png)
+![alt text](photos/image-31.png)
+![alt text](photos/image-32.png)
 
 
 ## Devlog #15 ->
@@ -299,7 +299,7 @@ Part 1 (still working on this one!)
 
 Finally started actually tackling the AI usage limit problem from devlog #2. Since everyone using the app shares the same free-tier Gemini key, scans would just randomly fail with no real pattern whenever enough people were hitting it at once. Started on the backend side first: instead of letting every incoming scan hit Gemini immediately, I added a little queue that only lets 2 requests be in-flight to Gemini at a time, and everything else waits its turn. Next step is getting it to actually retry instead of just failing after the wait, but that's for the next devlog.
 
-![alt text](image-33.png)
+![alt text](photos/image-33.png)
 
 
 ## Devlog #16 ->
@@ -307,8 +307,8 @@ Part 2, continuing from #15
 
 Got retries working on top of the queue from last time. If Gemini comes back with a 429 (rate limited) or 503 (overloaded) instead of an actual answer, the backend now waits and tries again automatically, using exponential backoff (2s, then 4s, then 8s) instead of hammering it again right away, up to a few attempts before it actually gives up and reports failure. It also checks for a retry-after header first and uses that instead of the backoff timer if Gemini actually tells us how long to wait. Then I mirrored the same idea on the Flutter side, so if the backend's retries still aren't enough, the app itself will retry the whole request a couple more times before showing the user an error.
 
-![alt text](image-34.png)
-![alt text](image-35.png)
+![alt text](photos/image-34.png)
+![alt text](photos/image-35.png)
 
 
 ## Devlog #17 ->
@@ -320,7 +320,7 @@ Current problems / what's next:
 - Low MongoDB storage for free account
 - Professionalizing
 
-![alt text](image-36.png)
+![alt text](photos/image-36.png)
 
 ## Devlog #18 ->
 Okay, super short devlog just to explain what I am doing. Basically all my hours are spent on fixing the notifications. It is super annoying right now because I am trying to finalize my project and the notifications randomly stop working. I tried clearing out mongoDB and checking on my cron-job and those seem to be working just fine. I'm not sure what to do. I pushed the hours up (for the practice day so I can check it earlier) and redeployed with Render. I shall see tomorrow if it works.
@@ -328,7 +328,7 @@ Okay, super short devlog just to explain what I am doing. Basically all my hours
 View it here: https://mirage54321.github.io/RoboLens/
 
 
-![alt text](image-37.png)
+![alt text](photos/image-37.png)
 
 
 
@@ -344,9 +344,9 @@ My issues to work on are:
 View it here: https://mirage54321.github.io/RoboLens/
 
 
-![alt text](<Screenshot 2026-09-05 232913.png>)
-![alt text](<Screenshot 2026-09-05 232925.png>)
-![alt text](<Screenshot 2026-09-05 232942.png>)
+![alt text](<photos/Screenshot 2026-09-05 232913.png>)
+![alt text](<photos/Screenshot 2026-09-05 232925.png>)
+![alt text](<photos/Screenshot 2026-09-05 232942.png>)
 
 
 
@@ -356,7 +356,7 @@ Overall, it works great. I just worry there may be an error that arises (that is
 
 View it here: https://mirage54321.github.io/RoboLens/
 
-![alt text](image-38.png)
+![alt text](photos/image-38.png)
 
 
 ## Devlog #21 ->
@@ -369,7 +369,7 @@ FYI: 90% of the time for this was spent removing the 3 burst messages for iPhone
 
 View it here: https://mirage54321.github.io/RoboLens/
 
-![alt text](image-39.png)
+![alt text](photos/image-39.png)
 
 ## Ship #2 - > 
 What did I make?
@@ -404,10 +404,10 @@ Takes some time to load, would be great if it is a bit faster. App is a bit conf
 Nice project, actually useful! Unfortunately I'm not part of the select few that take part in this program so this isn't for me :( Besides that the website doesn't seen to have any issues, everything works and the animations are nice. 
 I love the design, the oppertunities, and the looks and just the thought of getting this as an app is also crazy and needs a lot of talent to get it as an app
 I can see that you have put a lot of time and effort into making this really cool project. I think that you have made something very useful and something that i will probably use the next time I am going to make like a robot. I also like the color theme that you have chosen. I think that you could have made the loadin page a like bit better looking as it looks quite plain right now. 
-The image processing is good, but the loop crashes if the camera disconnects. Still, a great project!
+The photos/image processing is good, but the loop crashes if the camera disconnects. Still, a great project!
 I really appreciate you you mentioned it grew from a simple AI scanner into something an actual robotics team could use which is a very big implementation. The rules checker, shared battery tracking, live match data, and notifications all solves the real problems, and the README does a great job explaining how everything works.keep going
 if i was in robotics (im planning to do so) this tool will be at the top of my list. good job. 
 The overall UI looks really clean and polished. Even though I’m not very familiar with this field, the app felt very intuitive and easy to use. I also really appreciated that you’re hosting the live demo yourself, which made it super convenient to try out. In particular, the battery tracking feature really stood out to me!
 Awesome work building such a practical FRC assistant! The AI retry system and match center are brilliant. Keep polishing the iOS notification experience!
-I do not have an image of a robot to actual test but I did use a dummy image and it was able to tell me that the image did not contain a robot. All over functionality looked solid.
+I do not have an photos/image of a robot to actual test but I did use a dummy photos/image and it was able to tell me that the photos/image did not contain a robot. All over functionality looked solid.
 
