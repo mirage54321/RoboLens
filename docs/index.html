@@ -52,7 +52,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #ffffff;
+      background: #fffff8;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       transition: opacity 300ms ease-out;
       opacity: 1;
@@ -62,37 +62,100 @@
       opacity: 0;
       pointer-events: none;
     }
+
+    /* Scouting-radar loading screen: a rotating sweep over concentric rings,
+       with pulsing blips and a ticking "scouting" counter underneath. */
+    #loading .loading-radar {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+    }
+    #loading .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.09);
+    }
+    #loading .ring.r1 { inset: 0; }
+    #loading .ring.r2 { inset: 24px; }
+    #loading .ring.r3 { inset: 48px; }
+    #loading .ring.r4 { inset: 72px; }
+    #loading .crossline {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.09);
+    }
+    #loading .crossline.h { left: 0; right: 0; top: 50%; height: 1px; }
+    #loading .crossline.v { top: 0; bottom: 0; left: 50%; width: 1px; }
+    #loading .sweep {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, rgba(0, 179, 172, 0.32), rgba(0, 179, 172, 0) 28%, transparent 100%);
+      animation: loading-sweep-rot 2.8s linear infinite;
+    }
+    @keyframes loading-sweep-rot {
+      to { transform: rotate(360deg); }
+    }
+    #loading .blip {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #loading .blip::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: inherit;
+      opacity: 0.35;
+      animation: loading-blip-ping 2.8s ease-out infinite;
+    }
+    #loading .blip.b1 { top: 32%; left: 62%; background: #CF2879; }
+    #loading .blip.b1::after { animation-delay: 0.15s; }
+    #loading .blip.b2 { top: 58%; left: 28%; background: #FFC107; }
+    #loading .blip.b2::after { animation-delay: 0.9s; }
+    #loading .blip.b3 { top: 70%; left: 66%; background: #FFA007; }
+    #loading .blip.b3::after { animation-delay: 1.7s; }
+    #loading .blip.b4 { top: 40%; left: 40%; background: #00B3AC; }
+    #loading .blip.b4::after { animation-delay: 2.3s; }
+    @keyframes loading-blip-ping {
+      0% { transform: scale(0.4); opacity: 0.5; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    #loading .loading-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #1a1a1a;
+    }
     #loading .loading-wordmark {
-      font-size: 48px;
-      font-weight: 500;
-      color: #000000;
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #1a1a1a;
     }
     #loading .loading-wordmark .letter-l { color: #CF2879; }
     #loading .loading-wordmark .letter-e { color: #00B3AC; }
     #loading .loading-wordmark .letter-n { color: #FFC107; }
     #loading .loading-wordmark .letter-s { color: #FFA007; }
-    #loading .loading-spinner {
-      margin-top: 40px;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: 4px solid rgba(0, 0, 0, 0.08);
-      border-top-color: #CF2879;
-      animation:
-        loading-spin 0.9s linear infinite,
-        loading-color-cycle 3.2s ease-in-out infinite;
+    #loading .loading-readout {
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.4);
+      font-variant-numeric: tabular-nums;
     }
-    @keyframes loading-spin {
-      to { transform: rotate(360deg); }
-    }
-    /* Cycles the spinner's colored arc through the same four colors as the
-       l/e/n/s letters, in the same order, looping back to pink at the end. */
-    @keyframes loading-color-cycle {
-      0% { border-top-color: #CF2879; }
-      25% { border-top-color: #00B3AC; }
-      50% { border-top-color: #FFC107; }
-      75% { border-top-color: #FFA007; }
-      100% { border-top-color: #CF2879; }
+
+    @media (prefers-reduced-motion: reduce) {
+      #loading .sweep { animation: none; opacity: 0; }
+      #loading .blip::after { animation: none; opacity: 0; }
     }
   </style>
 </head>
@@ -101,9 +164,40 @@
        frame (see the flutter-first-frame listener below). This is what you
        actually see during the white/blank flash before Flutter boots. -->
   <div id="loading">
+    <div class="loading-radar">
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+      <div class="ring r3"></div>
+      <div class="ring r4"></div>
+      <div class="crossline h"></div>
+      <div class="crossline v"></div>
+      <div class="sweep"></div>
+      <div class="blip b1"></div>
+      <div class="blip b2"></div>
+      <div class="blip b3"></div>
+      <div class="blip b4"></div>
+      <div class="loading-center"></div>
+    </div>
     <div class="loading-wordmark">Robo<span class="letter-l">L</span><span class="letter-e">e</span><span class="letter-n">n</span><span class="letter-s">s</span></div>
-    <div class="loading-spinner"></div>
+    <div class="loading-readout" id="loading-readout">Scouting 0 teams</div>
   </div>
+  <script>
+    (function () {
+      var el = document.getElementById('loading-readout');
+      var target = 128;
+      var n = 0;
+      var timer = setInterval(function () {
+        n += 7;
+        if (n > target) n = 0;
+        el.textContent = 'Scouting ' + n + ' team' + (n === 1 ? '' : 's');
+      }, 90);
+      // Stop the counter once the loading screen is removed, so it doesn't
+      // keep running in the background for the rest of the session.
+      window.addEventListener('flutter-first-frame', function () {
+        clearInterval(timer);
+      });
+    })();
+  </script>
   <script>
     window.addEventListener('flutter-first-frame', function () {
       var loadingEl = document.getElementById('loading');

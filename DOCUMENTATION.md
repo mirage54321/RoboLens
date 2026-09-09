@@ -411,3 +411,13 @@ The overall UI looks really clean and polished. Even though I’m not very famil
 Awesome work building such a practical FRC assistant! The AI retry system and match center are brilliant. Keep polishing the iOS notification experience!
 I do not have an photos/image of a robot to actual test but I did use a dummy photos/image and it was able to tell me that the photos/image did not contain a robot. All over functionality looked solid.
 
+
+## Devlog #22 ->
+I was looking at the comments people left me from my ship and the first thing I noticed that I should work on is the load-in page. It is definitely kind of plain.
+To be honest, I used Claude to help a lot with this one. Making the spinning circle was pretty easy but I had some complex ideas I wanted to put to work and I just didn't know how to do it. 
+It has a huge radar that has the colors pop up and says "scounting __ teams".
+Overall, I am so happy about this new design! Let me know what you guys think!
+I also added a folder for the photos so it looks more organized!
+The next thing I plan to work on "loop crashes if the camera disconnects" comment.
+
+Live app: https://mirage54321.github.io/RoboLens/
