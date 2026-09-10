@@ -421,3 +421,7 @@ I also added a folder for the photos so it looks more organized!
 The next thing I plan to work on "loop crashes if the camera disconnects" comment.
 
 Live app: https://mirage54321.github.io/RoboLens/
+
+
+## Devlog #23 ->
+Live app: https://mirage54321.github.io/RoboLens/

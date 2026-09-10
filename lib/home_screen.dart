@@ -136,7 +136,6 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // welcome(),
                         scanner(context),
                         rules(context),
                         battery(context),
@@ -242,8 +241,6 @@ class HomeScreen extends StatelessWidget {
           const Text('Hey, ready to check your robot?',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
           const SizedBox(height: 3),
-          // Text('Pick a tool below to get started.',
-          //     style: TextStyle(fontSize: 13, color: grayConstant)),
         ],
       ),
     );

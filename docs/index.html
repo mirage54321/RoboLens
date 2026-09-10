@@ -191,8 +191,6 @@
         if (n > target) n = 0;
         el.textContent = 'Scouting ' + n + ' team' + (n === 1 ? '' : 's');
       }, 90);
-      // Stop the counter once the loading screen is removed, so it doesn't
-      // keep running in the background for the rest of the session.
       window.addEventListener('flutter-first-frame', function () {
         clearInterval(timer);
       });

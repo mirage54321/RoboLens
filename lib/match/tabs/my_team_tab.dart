@@ -155,12 +155,6 @@ class _MyTeamTabState extends State<MyTeamTab> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(team.profile?.teamName ?? 'Team ${team.teamNumber}', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                // if (status != null && team.selectedEvent?.isLiveNow == true)
-                //   Text(
-                //     'Rank ${status.rank ?? '-'}${status.numTeams != null ? '/${status.numTeams}' : ''} · ${status.wins}-${status.losses}-${status.ties}',
-                //     overflow: TextOverflow.ellipsis,
-                //     style: TextStyle(fontSize: 12, color: Colors.grey[500]),
-                //   ),
               ],
             ),
           ),
