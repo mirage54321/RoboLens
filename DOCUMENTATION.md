@@ -425,5 +425,8 @@ Live app: https://mirage54321.github.io/RoboLens/
 
 ## Devlog #23 ->
 
+Fixed the camera disconnect crash from the feedback. Turns out the camera plugin doesn't actually throw an error when the hardware gets yanked mid-session, it just quietly flips an internal hasError flag and keeps going. Which is why the app was crashing somewhere random instead of failing cleanly. Nothing in my code was listening for that flag, so it just kept trying to read frames and capture photos off a dead controller.
+
+Fixed it by adding a listener that actually watches for that error state, cleans everything up, and drops the user onto a proper "Camera disconnected, try again" screen instead of freezing or throwing. Also fixed the retry logic after a failed capture so it doesn't try to restart a stream on a controller that's already dead. Next up: the cursor. Someone pointed that out, because every button on web just shows the default arrow.
 
 Live app: https://mirage54321.github.io/RoboLens/
