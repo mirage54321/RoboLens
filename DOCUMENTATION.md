@@ -422,6 +422,8 @@ The next thing I plan to work on "loop crashes if the camera disconnects" commen
 
 Live app: https://mirage54321.github.io/RoboLens/
 
+![alt text](photos/image40.png)
+
 
 ## Devlog #23 ->
 
@@ -430,3 +432,5 @@ Fixed the camera disconnect crash from the feedback. Turns out the camera plugin
 Fixed it by adding a listener that actually watches for that error state, cleans everything up, and drops the user onto a proper "Camera disconnected, try again" screen instead of freezing or throwing. Also fixed the retry logic after a failed capture so it doesn't try to restart a stream on a controller that's already dead. Next up: the cursor. Someone pointed that out, because every button on web just shows the default arrow.
 
 Live app: https://mirage54321.github.io/RoboLens/
+
+![alt text](photos/IMG_9125.PNG)
