@@ -41,6 +41,7 @@ class _GuidedCameraScreenState extends State<GuidedCameraScreen> {
   bool permissionLockedOut = false;
   String? errorMassage;
   bool waitingForTap = false;
+  bool _cameraLost = false;
 
   DateTime? goodStartTime;
   double progressBar = 0;
@@ -104,12 +105,22 @@ class _GuidedCameraScreenState extends State<GuidedCameraScreen> {
         );
       });
       await stage('controller.initialize', () => newCamera.initialize());
-      if (!mounted) return;
+      if (!mounted) {
+        newCamera.dispose();
+        return;
+      }
+      _cameraLost = false;
+      newCamera.addListener(_onCameraValueChanged);
       setState(() => camera = newCamera);
 
       if (!kIsWeb) {
         await stage('startImageStream', () => newCamera.startImageStream(onSnapshot));
-        wobbleWatcher = accelerometerEventStream().listen(onWobble);
+        wobbleWatcher = accelerometerEventStream().listen(
+          onWobble,
+          onError: (Object e) {
+            debugPrint('Accelerometer stream error (ignored): $e');
+          },
+        );
       } else {
         try {
           WebProbe.watchTilt((pitchDeg) {
@@ -148,6 +159,41 @@ class _GuidedCameraScreenState extends State<GuidedCameraScreen> {
     }
   }
 
+  // Fires whenever the plugin updates CameraController.value — including
+  // when the OS/hardware forcibly closes the camera (physical disconnect,
+  // another app stealing it, etc). That case surfaces as `value.hasError`
+  // rather than as a thrown exception, so it's easy to miss.
+  void _onCameraValueChanged() {
+    final value = camera?.value;
+    if (value != null && value.hasError) {
+      _handleCameraLost(value.errorDescription);
+    }
+  }
+
+  void _handleCameraLost(String? reason) {
+    if (_cameraLost) return; // avoid re-entering while we're tearing down
+    _cameraLost = true;
+
+    debugPrint('Camera disconnected: $reason');
+    wobbleWatcher?.cancel();
+    wobbleWatcher = null;
+
+    final lostCamera = camera;
+    camera = null;
+    lostCamera?.removeListener(_onCameraValueChanged);
+    try {
+      lostCamera?.dispose();
+    } catch (_) {}
+
+    if (!mounted) return;
+    setState(() {
+      oops = true;
+      snapping = false;
+      busyBee = false;
+      errorMassage = 'Camera disconnected. ${reason ?? ''}'.trim();
+    });
+  }
+
   void onWobble(AccelerometerEvent event) {
     final pitchRad =
         math.atan2(-event.x, math.sqrt(event.y * event.y + event.z * event.z));
@@ -158,7 +204,9 @@ class _GuidedCameraScreenState extends State<GuidedCameraScreen> {
   }
 
   void onSnapshot(CameraImage image) {
-    if (busyBee || snapping) return;
+    if (busyBee || snapping || _cameraLost) return;
+    final cam = camera;
+    if (cam == null || !cam.value.isInitialized || cam.value.hasError) return;
     busyBee = true;
     try {
       final yPlane = image.planes[0];
@@ -228,29 +276,44 @@ class _GuidedCameraScreenState extends State<GuidedCameraScreen> {
   }
 
   Future<void> snapPic() async {
-    if (snapping || camera == null) return;
+    if (snapping || _cameraLost) return;
+    final cam = camera;
+    if (cam == null || !cam.value.isInitialized || cam.value.hasError) return;
+
     setState(() => snapping = true);
     try {
       if (!kIsWeb) {
-        await camera!.stopImageStream();
+        await cam.stopImageStream();
       } else {
         WebProbe.stopFrame();
         WebProbe.stopTilt();
       }
-      final file = await camera!.takePicture();
+      final file = await cam.takePicture();
       final bytes = await file.readAsBytes();
       if (!mounted) return;
       Navigator.pop(context, bytes);
     } catch (e) {
+      if (_cameraLost) return; // _handleCameraLost already updated state
       if (!mounted) return;
       setState(() => snapping = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Capture failed: $e')),
       );
       if (!kIsWeb) {
-        try {
-          await camera?.startImageStream(onSnapshot);
-        } catch (_) {}
+        // Only try to resume streaming if the controller is still alive —
+        // restarting a stream on a disconnected/errored camera is what
+        // used to throw again here and crash the flow.
+        final stillGood = camera != null &&
+            camera!.value.isInitialized &&
+            !camera!.value.hasError;
+        if (stillGood) {
+          try {
+            await camera!.startImageStream(onSnapshot);
+          } catch (streamError) {
+            debugPrint('Could not resume image stream: $streamError');
+            _handleCameraLost(streamError.toString());
+          }
+        }
       } else {
         WebProbe.watchTilt((pitchDeg) {
           if (!mounted) return;
@@ -281,6 +344,7 @@ class _GuidedCameraScreenState extends State<GuidedCameraScreen> {
       WebProbe.stopTilt();
       WebProbe.stopFrame();
     }
+    camera?.removeListener(_onCameraValueChanged);
     camera?.dispose();
     super.dispose();
   }
@@ -335,7 +399,9 @@ class _GuidedCameraScreenState extends State<GuidedCameraScreen> {
                       Text(
                         noPermission
                             ? 'Camera access is needed to take a guided photo.'
-                            : 'Could not access the camera.',
+                            : (_cameraLost
+                                ? 'Camera disconnected.'
+                                : 'Could not access the camera.'),
                         style: const TextStyle(color: Colors.white, fontSize: 15),
                         textAlign: TextAlign.center,
                       ),
@@ -357,7 +423,7 @@ class _GuidedCameraScreenState extends State<GuidedCameraScreen> {
                           ),
                           child: const Text('Open Settings'),
                         ),
-                      ] else if (noPermission) ...[
+                      ] else ...[
                         const SizedBox(height: 18),
                         ElevatedButton(
                           onPressed: () {
@@ -365,6 +431,7 @@ class _GuidedCameraScreenState extends State<GuidedCameraScreen> {
                               oops = false;
                               noPermission = false;
                               errorMassage = null;
+                              _cameraLost = false;
                             });
                             fireUp();
                           },
