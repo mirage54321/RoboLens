@@ -8,18 +8,6 @@ import 'constants.dart';
 import 'retry_helper.dart';
 import 'connectivity_check.dart';
 
-const List<String> gridRegionNames = [
-  'top-left',
-  'top-center',
-  'top-right',
-  'middle-left',
-  'center',
-  'middle-right',
-  'bottom-left',
-  'bottom-center',
-  'bottom-right',
-];
-
 class CropRegion {
   final double x;
   final double y;
@@ -32,31 +20,19 @@ class CropRegion {
     required this.width,
     required this.height,
   });
+}
 
-  factory CropRegion.fromRegionName(String region) {
-    switch (region) {
-      case 'top-left':
-        return const CropRegion(x: 0.0, y: 0.0, width: 0.55, height: 0.55);
-      case 'top-center':
-        return const CropRegion(x: 0.25, y: 0.0, width: 0.5, height: 0.5);
-      case 'top-right':
-        return const CropRegion(x: 0.45, y: 0.0, width: 0.55, height: 0.55);
-      case 'middle-left':
-        return const CropRegion(x: 0.0, y: 0.25, width: 0.55, height: 0.5);
-      case 'center':
-        return const CropRegion(x: 0.2, y: 0.2, width: 0.6, height: 0.6);
-      case 'middle-right':
-        return const CropRegion(x: 0.45, y: 0.25, width: 0.55, height: 0.5);
-      case 'bottom-left':
-        return const CropRegion(x: 0.0, y: 0.45, width: 0.55, height: 0.55);
-      case 'bottom-center':
-        return const CropRegion(x: 0.25, y: 0.5, width: 0.5, height: 0.5);
-      case 'bottom-right':
-        return const CropRegion(x: 0.45, y: 0.45, width: 0.55, height: 0.55);
-      default:
-        return const CropRegion(x: 0.0, y: 0.0, width: 1.0, height: 1.0);
-    }
-  }
+CropRegion regionAroundPoint(
+  double centerX,
+  double centerY, {
+  double size = 0.45,
+}) {
+  final clampedSize = size.clamp(0.05, 1.0);
+  var x = centerX - clampedSize / 2;
+  var y = centerY - clampedSize / 2;
+  x = x.clamp(0.0, 1.0 - clampedSize);
+  y = y.clamp(0.0, 1.0 - clampedSize);
+  return CropRegion(x: x, y: y, width: clampedSize, height: clampedSize);
 }
 
 class CroppedImage {
@@ -123,14 +99,22 @@ class RoughFinding {
   final String title;
   final String description;
   final ScanStatus severity;
-  final String region;
+  final double centerX;
+  final double centerY;
 
   RoughFinding({
     required this.title,
     required this.description,
     required this.severity,
-    required this.region,
+    required this.centerX,
+    required this.centerY,
   });
+}
+
+double scaleCoord(dynamic v) {
+  if (v == null) return 0.5;
+  final n = (v as num).toDouble();
+  return (n / 1000.0).clamp(0.0, 1.0);
 }
 
 class AiService {
@@ -191,35 +175,26 @@ class AiService {
 
     if (roughFindings.isEmpty) return [];
 
-    final byRegion = <String, List<RoughFinding>>{};
-    for (final f in roughFindings) {
-      byRegion.putIfAbsent(f.region, () => []).add(f);
-    }
-
     final located = <Finding>[];
-    for (final entry in byRegion.entries) {
-      final region = CropRegion.fromRegionName(entry.key);
+    for (final f in roughFindings) {
+      final region = regionAroundPoint(f.centerX, f.centerY);
       final crop = cropToRegion(imageBytes, region);
 
-      final boxesByTitle = await withBackoffRetry<Map<String, List<dynamic>?>>(
-        () => _localizeOnce(crop, entry.value),
+      final box2d = await withBackoffRetry<List<dynamic>?>(
+        () => _localizeOnce(crop, f),
         maxAttempts: maxAttempts,
         initialDelay: const Duration(seconds: 3),
         isRetryable: isHighDemandError,
         onRetry: onRetry,
       );
 
-      for (final f in entry.value) {
-        final key = f.title.trim().toLowerCase();
-        final box2d = boxesByTitle[key];
-        located.add(Finding(
-          title: f.title,
-          description: f.description,
-          severity: f.severity,
-          box: mapBoxFromCropToFull(box2d, region),
-          isReported: false,
-        ));
-      }
+      located.add(Finding(
+        title: f.title,
+        description: f.description,
+        severity: f.severity,
+        box: mapBoxFromCropToFull(box2d, region),
+        isReported: false,
+      ));
     }
 
     return _dedupeFindings(located);
@@ -277,13 +252,15 @@ class AiService {
       final findingsJson = parsed['findings'] as List<dynamic>? ?? [];
       return findingsJson.map((f) {
         final map = f as Map<String, dynamic>;
-        final regionRaw = (map['region'] as String? ?? 'center').toLowerCase();
-        final region = gridRegionNames.contains(regionRaw) ? regionRaw : 'center';
+        final point = map['point'] as List<dynamic>?;
+        final centerY = point != null && point.length == 2 ? scaleCoord(point[0]) : 0.5;
+        final centerX = point != null && point.length == 2 ? scaleCoord(point[1]) : 0.5;
         return RoughFinding(
           title: map['title'] as String? ?? 'Issue found',
           description: map['description'] as String? ?? '',
           severity: parseSeverity(map['severity']),
-          region: region,
+          centerX: centerX,
+          centerY: centerY,
         );
       }).toList();
     } catch (e) {
@@ -291,19 +268,15 @@ class AiService {
     }
   }
 
-  static Future<Map<String, List<dynamic>?>> _localizeOnce(
+  static Future<List<dynamic>?> _localizeOnce(
     CroppedImage crop,
-    List<RoughFinding> findingsInRegion,
+    RoughFinding finding,
   ) async {
-    final titleList = findingsInRegion
-        .map((f) => '- "${f.title}": ${f.description}')
-        .join('\n');
-
     final body = {
       'contents': [
         {
           'parts': [
-            {'text': _localizePromptText(titleList)},
+            {'text': _localizePromptText(finding.title, finding.description)},
             {
               'inline_data': {
                 'mime_type': 'image/jpeg',
@@ -315,7 +288,7 @@ class AiService {
       ],
       'generationConfig': {
         'temperature': 0,
-        'maxOutputTokens': 1000,
+        'maxOutputTokens': 300,
         'responseMimeType': 'application/json',
       },
     };
@@ -326,7 +299,7 @@ class AiService {
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(body),
         )
-        .timeout(const Duration(seconds: 45));
+        .timeout(const Duration(seconds: 30));
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -345,17 +318,9 @@ class AiService {
 
     try {
       final parsed = jsonDecode(rawText) as Map<String, dynamic>;
-      final boxesJson = parsed['boxes'] as List<dynamic>? ?? [];
-      final result = <String, List<dynamic>?>{};
-      for (final b in boxesJson) {
-        final map = b as Map<String, dynamic>;
-        final title = (map['title'] as String? ?? '').trim().toLowerCase();
-        if (title.isEmpty) continue;
-        result[title] = map['box_2d'] as List<dynamic>?;
-      }
-      return result;
+      return parsed['box_2d'] as List<dynamic>?;
     } catch (e) {
-      return {};
+      return null;
     }
   }
 
@@ -363,7 +328,9 @@ class AiService {
       'You are helping a FRC (FIRST Robotics Competition) team do a quick '
       'visual check of their robot before a real inspection. Your job is to '
       'point out things worth a closer look, not to give a final verdict on '
-      'safety or compliance. Look at the whole photo carefully.\n\n'
+      'safety or compliance. The photo may have a lot of plain background '
+      'around the robot, so look carefully at where the robot itself '
+      'actually is.\n\n'
       'Look for things like exposed conductors or damaged insulation, '
       'loose or unsecured wiring, loose connectors, unprotected battery '
       'terminals, loose or missing fasteners, cracked or bent frame '
@@ -381,40 +348,34 @@ class AiService {
       'describe specifically. If you are not confident something is an '
       'issue, phrase it as something to double check rather than a '
       'confirmed problem.\n\n'
-      'For each thing you flag, say roughly where it is in the photo using '
-      'one of these nine labels: top-left, top-center, top-right, '
-      'middle-left, center, middle-right, bottom-left, bottom-center, '
-      'bottom-right. Give each finding a short, specific title, since it '
-      'will be used later to match against a zoomed-in crop, so titles must '
-      'be unique and distinct from each other.\n\n'
-      'Return an empty findings list ONLY when the photo is clear enough to '
-      'inspect and you see nothing worth a closer look. If the image is too '
-      'dark, blurry, obstructed, or too distant for a meaningful check, '
-      'return one item titled "Photo quality prevents inspection" with '
-      'region "center" instead of returning an empty list. Respond only '
-      'with JSON in this exact format:\n\n'
+      'For each thing you flag, give its approximate center point ON THE '
+      'ROBOT ITSELF (not the background) as "point":[y,x], each 0-1000, '
+      'relative to the full photo, using Gemini\'s standard point format. '
+      'Give each finding a short, specific title.\n\n'
+      'Return an empty findings list ONLY when the photo is clear enough '
+      'to inspect and you see nothing worth a closer look. If the image is '
+      'too dark, blurry, obstructed, or too distant for a meaningful '
+      'check, return one item titled "Photo quality prevents inspection" '
+      'with point [500,500] instead of returning an empty list. Respond '
+      'only with JSON in this exact format:\n\n'
       '{"findings":[{"title":"short specific issue name","description":'
       '"one or two sentence explanation of what to look at and why",'
-      '"severity":"critical|warning|ok","region":"top-left"}]}\n\n'
+      '"severity":"critical|warning|ok","point":[500,500]}]}\n\n'
       'If nothing stands out, return {"findings":[]}.';
 
-  static String _localizePromptText(String titleList) =>
-      'You are looking at a zoomed-in crop of a larger robot photo. A '
-      'previous pass identified these possible issues as being roughly in '
-      'this area of the photo:\n\n$titleList\n\n'
-      'For each one, look carefully in THIS crop and, if you can actually '
-      'see it, give its exact bounding box within this crop. If you cannot '
-      'find a specific one of these in this crop, leave it out entirely, '
-      'do not guess a box for it. Do not add any new issues that were not '
-      'in the list above.\n\n'
+  static String _localizePromptText(String title, String description) =>
+      'You are looking at a zoomed-in crop of a larger robot photo, '
+      'centered on where a possible issue was spotted:\n\n'
+      'Title: "$title"\nDescription: $description\n\n'
+      'If you can actually see this specific issue somewhere in this crop, '
+      'give its exact bounding box within this crop. If you cannot find it '
+      'in this crop, respond with box_2d as null, do not guess.\n\n'
       'For box_2d, use Gemini\'s standard format: [ymin, xmin, ymax, xmax], '
-      'each 0–1000, relative to THIS CROP. Match each box back to its exact '
-      'title from the list above. Respond only with JSON in this exact '
-      'format:\n\n'
-      '{"boxes":[{"title":"short specific issue name","box_2d":'
-      '[0,0,0,0]}]}\n\n'
-      'If none of the listed issues are visible in this crop, return '
-      '{"boxes":[]}.';
+      'each 0–1000, relative to THIS CROP. Respond only with JSON in this '
+      'exact format:\n\n'
+      '{"box_2d":[0,0,0,0]}\n\n'
+      'or, if not visible in this crop:\n\n'
+      '{"box_2d":null}';
 
   static bool _looksLikeQuotaError(String msg) {
     final lower = msg.toLowerCase();
@@ -433,20 +394,6 @@ class AiService {
       return null;
     }
   }
-}
-
-Finding findingFromRegionJson(Map<String, dynamic> json) {
-  final regionName = json['region'] as String?;
-  final region = CropRegion.fromRegionName(regionName ?? '');
-  final box2d = json['box_2d'] as List<dynamic>?;
-
-  return Finding(
-    title: json['title'] as String? ?? 'Issue found',
-    description: json['description'] as String? ?? '',
-    severity: parseSeverity(json['severity']),
-    box: mapBoxFromCropToFull(box2d, region),
-    isReported: false,
-  );
 }
 
 ScanStatus parseSeverity(dynamic value) {
