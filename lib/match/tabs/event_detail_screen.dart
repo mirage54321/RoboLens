@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../tap_cursor.dart';
 
 import '../match_scope.dart';
 import '../match_models.dart';
@@ -149,7 +150,7 @@ class EventDetailScreenState extends State<EventDetailScreen> {
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
               child: Row(
                 children: [
-                  GestureDetector(
+                  TapCursor(
                     onTap: () => Navigator.pop(context),
                     child: Container(
                       width: 34,
@@ -293,7 +294,7 @@ class EventDetailScreenState extends State<EventDetailScreen> {
         children: [
           Text(message, style: TextStyle(color: Colors.grey[500])),
           const SizedBox(height: 8),
-          GestureDetector(
+          TapCursor(
             onTap: onRetry,
             child: const Text('Try again', style: TextStyle(color: MatchColors.yellorDark, fontWeight: FontWeight.w600)),
           ),

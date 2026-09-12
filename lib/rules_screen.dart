@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'tap_cursor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'constants.dart';
 import 'ai_rules.dart';
@@ -141,7 +142,7 @@ class _RulesScreenState extends State<RulesScreen> {
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
       child: Row(
         children: [
-          GestureDetector(
+          TapCursor(
             onTap: () => Navigator.pop(context),
             child: Container(
               width: 34,
@@ -181,7 +182,7 @@ class _RulesScreenState extends State<RulesScreen> {
               final selected = option == year;
               return Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: GestureDetector(
+                child: TapCursor(
                   onTap: () => setState(() => year = option),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 150),
@@ -327,7 +328,7 @@ class _RulesScreenState extends State<RulesScreen> {
     required String label,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return TapCursor(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 8),
@@ -359,7 +360,7 @@ class _RulesScreenState extends State<RulesScreen> {
 
   Widget analyzeButt() {
     final ready = _imageBytes != null && !analyzedYes;
-    return GestureDetector(
+    return TapCursor(
       onTap: ready ? sendToai : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),

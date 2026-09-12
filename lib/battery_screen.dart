@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'tap_cursor.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -741,7 +742,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
 
   Widget _settingsTile(IconData icon, String label, VoidCallback onTap, {Color? color}) {
     final c = color ?? Colors.black87;
-    return GestureDetector(
+    return TapCursor(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -812,7 +813,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
       child: Row(
         children: [
-          GestureDetector(
+          TapCursor(
             onTap: () => Navigator.pop(context),
             child: Container(
               width: 34, height: 34,
@@ -829,7 +830,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
                 Text('Guest view (read only)', style: TextStyle(fontSize: 11, color: Colors.grey[500])),
             ]),
           ),
-          GestureDetector(
+          TapCursor(
             onTap: _showSettings,
             child: Container(
               width: 34, height: 34,
@@ -848,7 +849,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
       return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text(_error!, style: TextStyle(color: Colors.grey[600])),
         const SizedBox(height: 12),
-        GestureDetector(
+        TapCursor(
           onTap: _loadBatteries,
           child: const Text('Try again', style: TextStyle(color: Yellor, fontWeight: FontWeight.w500)),
         ),
@@ -972,7 +973,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
             if (_recommendReason != null)
               Text(_recommendReason!, style: TextStyle(fontSize: 12, color: Colors.grey[700])),
           ])),
-          GestureDetector(
+          TapCursor(
             onTap: () => setState(() { _recommendedLabel = null; _recommendReason = null; }),
             child: Icon(Icons.close, size: 16, color: Colors.grey[500]),
           ),
@@ -980,7 +981,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
       );
     }
 
-    return GestureDetector(
+    return TapCursor(
       onTap: _askAiRecommendation,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1020,7 +1021,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
                 style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.9))),
             if (battery.flags.isNotEmpty) ...[
               const SizedBox(height: 6),
-              GestureDetector(
+              TapCursor(
                 onTap: () => _viewFlags(battery),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -1034,7 +1035,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
           ])),
           if (!_isGuest)
             Column(children: [
-              GestureDetector(
+              TapCursor(
                 onTap: () => _toggleCharging(battery),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -1047,7 +1048,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              GestureDetector(
+              TapCursor(
                 onTap: () => _flagWeak(battery),
                 child: Text('Flag weak',
                     style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.85))),
@@ -1089,7 +1090,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
           if (battery.flags.isNotEmpty) ...[
             const SizedBox(height: 3),
-            GestureDetector(
+            TapCursor(
               onTap: () => _viewFlags(battery),
               child: Text('flagged ${battery.flags.length}x, tap to view',
                   style: const TextStyle(fontSize: 11, color: redChar)),
@@ -1097,7 +1098,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
           ],
         ])),
         if (!_isGuest) ...[
-          GestureDetector(
+          TapCursor(
             onTap: () => _toggleCharging(battery),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -1110,7 +1111,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
             ),
           ),
           const SizedBox(width: 6),
-          GestureDetector(
+          TapCursor(
             onTap: () => _toggleInUse(battery),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -1123,7 +1124,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
             ),
           ),
           const SizedBox(width: 6),
-          GestureDetector(
+          TapCursor(
             onTap: () => _flagWeak(battery),
             child: Padding(padding: const EdgeInsets.all(8),
                 child: Icon(Icons.flag_outlined, size: 16, color: Colors.grey[500])),
@@ -1134,7 +1135,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
   }
 
   Widget _addButton() {
-    return GestureDetector(
+    return TapCursor(
       onTap: _addBattery,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 13),

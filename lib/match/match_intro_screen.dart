@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../tap_cursor.dart';
 
 import 'match_theme.dart';
 
@@ -19,7 +20,7 @@ class MatchIntroScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
               child: Row(
                 children: [
-                  GestureDetector(
+                  TapCursor(
                     onTap: () => Navigator.pop(context),
                     child: Container(
                       width: 34,

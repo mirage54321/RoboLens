@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../tap_cursor.dart';
 
 import '../match_data_controller.dart';
 import '../match_models.dart';
@@ -88,7 +89,7 @@ class _MatchScheduleScreenState extends State<MatchScheduleScreen> {
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
               child: Row(
                 children: [
-                  GestureDetector(
+                  TapCursor(
                     onTap: () => Navigator.pop(context),
                     child: Container(
                       width: 34,
@@ -134,7 +135,7 @@ class _MatchScheduleScreenState extends State<MatchScheduleScreen> {
             children: [
               Text('Could not load the match schedule.', style: TextStyle(color: Colors.grey[600])),
               const SizedBox(height: 8),
-              GestureDetector(
+              TapCursor(
                 onTap: load,
                 child: const Text('Try again', style: TextStyle(color: MatchColors.yellorDark, fontWeight: FontWeight.w600)),
               ),

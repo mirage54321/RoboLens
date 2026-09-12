@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'tap_cursor.dart';
 import 'constants.dart';
 import 'ai_scan.dart';
 import 'scan_screen.dart';
@@ -91,7 +92,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
       child: Row(
         children: [
-          GestureDetector(
+          TapCursor(
             onTap: () => Navigator.pop(context),
             child: Container(
               width: 34,
@@ -120,7 +121,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
   }
 
   Widget photor() {
-    return GestureDetector(
+    return TapCursor(
       onTap: () => setState(() => _highlightedIndex = null),
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 12, 16, 12),
@@ -252,7 +253,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
             : 'All clear';
     final isHighlighted = _highlightedIndex == index;
 
-    return GestureDetector(
+    return TapCursor(
       onTap: finding.box == null
           ? null
           : () => setState(() {
@@ -372,7 +373,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                 color: Colors.grey[500])),
                       ],
                     )
-                  : GestureDetector(
+                  : TapCursor(
                       onTap: () => _reportFinding(index, finding),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -437,7 +438,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
       child: Row(
         children: [
           Expanded(
-            child: GestureDetector(
+            child: TapCursor(
               onTap: () => Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (_) => const ScanScreen()),

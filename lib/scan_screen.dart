@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'tap_cursor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'constants.dart';
 import 'ai_scan.dart';
@@ -134,7 +135,7 @@ class _ScanScreenState extends State<ScanScreen> {
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
       child: Row(
         children: [
-          GestureDetector(
+          TapCursor(
             onTap: () => Navigator.pop(context),
             child: Container(
               width: 34,
@@ -272,7 +273,7 @@ class _ScanScreenState extends State<ScanScreen> {
     required String label,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return TapCursor(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 8),
@@ -304,7 +305,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
   Widget button() {
     final ready = _imageBytes != null && !_isAnalyzing;
-    return GestureDetector(
+    return TapCursor(
       onTap: ready ? _analyze : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),

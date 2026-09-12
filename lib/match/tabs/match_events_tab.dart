@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../tap_cursor.dart';
 
 import '../match_models.dart';
 import '../match_scope.dart';
@@ -153,7 +154,7 @@ class _MatchEventsTabState extends State<MatchEventsTab> {
 
   Widget _eventCard(BuildContext context, MatchEvent e, bool isMine) {
     final isLive = e.isLiveNow;
-    return GestureDetector(
+    return TapCursor(
       onTap: () {
 
         final controller = MatchScope.of(context);

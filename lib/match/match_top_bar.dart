@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../tap_cursor.dart';
 
 import 'match_scope.dart';
 import 'match_theme.dart';
@@ -23,7 +24,7 @@ class MatchTopBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Opacity(
             opacity: showingPushHint ? .35 : 1,
-            child: GestureDetector(
+            child: TapCursor(
               onTap: () => Navigator.pop(context),
               child: iconTile(Icons.arrow_back),
             ),
@@ -51,7 +52,7 @@ class MatchTopBar extends StatelessWidget implements PreferredSizeWidget {
                   child: child,
                 ),
               ),
-              child: GestureDetector(
+              child: TapCursor(
               onTap: team.selectedEventKey == null ? null : () => togglePush(context),
               child: Container(
                 width: 34,

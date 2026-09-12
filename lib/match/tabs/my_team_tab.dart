@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../tap_cursor.dart';
 
 import '../match_data_controller.dart';
 import '../match_models.dart';
@@ -121,7 +122,7 @@ class _MyTeamTabState extends State<MyTeamTab> {
           children: [
             Text(team.error!, style: TextStyle(color: Colors.grey[600]), textAlign: TextAlign.center),
             const SizedBox(height: 12),
-            GestureDetector(
+            TapCursor(
               onTap: controller.refreshEvents,
               child: const Text('Try again', style: TextStyle(color: MatchColors.yellor, fontWeight: FontWeight.w500)),
             ),
@@ -158,12 +159,12 @@ class _MyTeamTabState extends State<MyTeamTab> {
               ],
             ),
           ),
-          GestureDetector(
+          TapCursor(
             onTap: () => showTeamPrompt(context),
             child: Icon(Icons.edit_outlined, size: 18, color: Colors.grey[400]),
           ),
           const SizedBox(width: 10),
-          GestureDetector(
+          TapCursor(
             onTap: () => confirmStop(context, controller, team),
             child: Icon(Icons.close, size: 18, color: Colors.grey[400]),
           ),
@@ -195,7 +196,7 @@ class _MyTeamTabState extends State<MyTeamTab> {
   Widget pushCard(MatchDataController controller, MyTeam team) {
     if (team.pushState == 'unsupported') return const SizedBox.shrink();
     final subscribed = team.pushState == 'subscribed';
-    return GestureDetector(
+    return TapCursor(
       onTap: subscribed ? null : controller.showPushButtonHint,
       child: Container(
       padding: const EdgeInsets.all(14),

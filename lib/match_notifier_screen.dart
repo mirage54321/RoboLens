@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'tap_cursor.dart';
 
 import 'match/match_data_controller.dart';
 import 'match/match_scope.dart';
@@ -77,7 +78,7 @@ class _MatchNotifierScreenState extends State<MatchNotifierScreen> {
                 ),
                 if (showingPushHint)
                   Positioned.fill(
-                    child: GestureDetector(
+                    child: TapCursor(
                       behavior: HitTestBehavior.opaque,
                       onTap: _controller.dismissPushButtonHint,
                       child: ColoredBox(color: Colors.black.withValues(alpha: .52)),

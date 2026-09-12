@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'tap_cursor.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'battery_screen.dart';
@@ -232,7 +233,7 @@ class _BatteryLoginScreenState extends State<BatteryLoginScreen>
                 children: [
                   Row(
                     children: [
-                      GestureDetector(
+                      TapCursor(
                         onTap: () => Navigator.pop(context),
                         child: Container(
                           width: 34,
@@ -384,7 +385,7 @@ class _BatteryLoginScreenState extends State<BatteryLoginScreen>
   Widget _bigButton(String label, VoidCallback? onTap) {
     return SizedBox(
       width: double.infinity,
-      child: GestureDetector(
+      child: TapCursor(
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),

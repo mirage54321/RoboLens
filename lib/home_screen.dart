@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'tap_cursor.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'constants.dart';
 import 'scan_screen.dart';
@@ -43,7 +44,7 @@ class HomeScreen extends StatelessWidget {
                     const Text('Report an error',
                         style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
                     const Spacer(),
-                    GestureDetector(
+                    TapCursor(
                       onTap: () => Navigator.pop(ctx),
                       child: Icon(Icons.close, color: Colors.grey[400], size: 20),
                     ),
@@ -152,7 +153,7 @@ class HomeScreen extends StatelessWidget {
             Positioned(
               right: 16,
               bottom: 16,
-              child: GestureDetector(
+              child: TapCursor(
                 onTap: () => _showReportDialog(context),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -256,7 +257,7 @@ class HomeScreen extends StatelessWidget {
     required Color ctaTextColor,
     required IconData icon,
   }) {
-    return GestureDetector(
+    return TapCursor(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),

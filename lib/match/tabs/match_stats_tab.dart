@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../tap_cursor.dart';
 
 import '../match_data_controller.dart';
 import '../match_models.dart';
@@ -118,7 +119,7 @@ class MatchStatsTabState extends State<MatchStatsTab> {
                   ),
                   if (showToggle) ...[
                     const SizedBox(width: 8),
-                    GestureDetector(
+                    TapCursor(
                       onTap: () => toggleMyTeam(myTeamNumber),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -233,7 +234,7 @@ class MatchStatsTabState extends State<MatchStatsTab> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
-                  GestureDetector(
+                  TapCursor(
                     onTap: () {
                       final controller = MatchScope.of(context);
                       setState(
@@ -363,7 +364,7 @@ class MatchStatsTabState extends State<MatchStatsTab> {
     int position,
     bool isMine,
   ) {
-    return GestureDetector(
+    return TapCursor(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => TeamDetailScreen(team: team)),
