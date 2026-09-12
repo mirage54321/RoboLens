@@ -3,7 +3,6 @@ import 'cursor_controller.dart';
 
 const _kGlowColor = Color(0xFF00B3AC);
 
-
 class CustomCursorOverlay extends StatelessWidget {
   final Widget child;
   const CustomCursorOverlay({super.key, required this.child});
@@ -17,20 +16,20 @@ class CustomCursorOverlay extends StatelessWidget {
       child: Stack(
         children: [
           child,
-          IgnorePointer(
-            child: AnimatedBuilder(
-              animation: CursorController.instance,
-              builder: (context, _) {
-                final c = CursorController.instance;
-                if (!c.visible || c.position == null) {
-                  return const SizedBox.shrink();
-                }
-                final size = c.hovering ? 40.0 : 20.0;
-                return AnimatedPositioned(
-                  duration: const Duration(milliseconds: 160),
-                  curve: Curves.easeOut,
-                  left: c.position!.dx - size / 2,
-                  top: c.position!.dy - size / 2,
+          AnimatedBuilder(
+            animation: CursorController.instance,
+            builder: (context, _) {
+              final c = CursorController.instance;
+              if (!c.visible || c.position == null) {
+                return const SizedBox.shrink();
+              }
+              final size = c.hovering ? 40.0 : 20.0;
+              return AnimatedPositioned(
+                duration: const Duration(milliseconds: 160),
+                curve: Curves.easeOut,
+                left: c.position!.dx - size / 2,
+                top: c.position!.dy - size / 2,
+                child: IgnorePointer(
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
                     curve: Curves.easeOut,
@@ -47,9 +46,9 @@ class CustomCursorOverlay extends StatelessWidget {
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ],
       ),
