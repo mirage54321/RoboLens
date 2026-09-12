@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'cursor_controller.dart';
 
 class TapCursor extends StatelessWidget {
   const TapCursor({
@@ -18,6 +19,12 @@ class TapCursor extends StatelessWidget {
       cursor: onTap == null
           ? SystemMouseCursors.basic
           : SystemMouseCursors.click,
+      onEnter: onTap == null
+          ? null
+          : (_) => CursorController.instance.setHovering(true),
+      onExit: onTap == null
+          ? null
+          : (_) => CursorController.instance.setHovering(false),
       child: GestureDetector(
         onTap: onTap,
         behavior: behavior,
