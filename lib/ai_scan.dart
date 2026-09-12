@@ -119,6 +119,20 @@ BoundingBox? mapBoxFromCropToFull(
 typedef RetryCallback = void Function(
     int attempt, int maxAttempts, Duration nextDelay);
 
+class RoughFinding {
+  final String title;
+  final String description;
+  final ScanStatus severity;
+  final String region;
+
+  RoughFinding({
+    required this.title,
+    required this.description,
+    required this.severity,
+    required this.region,
+  });
+}
+
 class AiService {
   static const String _base = 'https://ridgeboticsapp.onrender.com';
 
@@ -158,7 +172,6 @@ class AiService {
     }
   }
 
-  
   static Future<List<Finding>> analyzeImage(
     Uint8List imageBytes, {
     int maxAttempts = 3,
@@ -168,43 +181,70 @@ class AiService {
       throw Exception('offline');
     }
 
-
-    final crops = {
-      for (final name in gridRegionNames)
-        name: cropToRegion(imageBytes, CropRegion.fromRegionName(name)),
-    };
-
-    return withBackoffRetry<List<Finding>>(
-      () => _analyzeOnce(crops),
+    final roughFindings = await withBackoffRetry<List<RoughFinding>>(
+      () => _detectOnce(imageBytes),
       maxAttempts: maxAttempts,
       initialDelay: const Duration(seconds: 3),
       isRetryable: isHighDemandError,
       onRetry: onRetry,
     );
+
+    if (roughFindings.isEmpty) return [];
+
+    final byRegion = <String, List<RoughFinding>>{};
+    for (final f in roughFindings) {
+      byRegion.putIfAbsent(f.region, () => []).add(f);
+    }
+
+    final located = <Finding>[];
+    for (final entry in byRegion.entries) {
+      final region = CropRegion.fromRegionName(entry.key);
+      final crop = cropToRegion(imageBytes, region);
+
+      final boxesByTitle = await withBackoffRetry<Map<String, List<dynamic>?>>(
+        () => _localizeOnce(crop, entry.value),
+        maxAttempts: maxAttempts,
+        initialDelay: const Duration(seconds: 3),
+        isRetryable: isHighDemandError,
+        onRetry: onRetry,
+      );
+
+      for (final f in entry.value) {
+        final key = f.title.trim().toLowerCase();
+        final box2d = boxesByTitle[key];
+        located.add(Finding(
+          title: f.title,
+          description: f.description,
+          severity: f.severity,
+          box: mapBoxFromCropToFull(box2d, region),
+          isReported: false,
+        ));
+      }
+    }
+
+    return _dedupeFindings(located);
   }
 
-  static Future<List<Finding>> _analyzeOnce(
-      Map<String, CroppedImage> crops) async {
-    final parts = <Map<String, dynamic>>[
-      {'text': _promptText},
-    ];
-    for (final name in gridRegionNames) {
-      parts.add({'text': 'Region: $name'});
-      parts.add({
-        'inline_data': {
-          'mime_type': 'image/jpeg',
-          'data': crops[name]!.base64Jpeg,
-        }
-      });
-    }
+  static Future<List<RoughFinding>> _detectOnce(Uint8List imageBytes) async {
+    final base64Image = base64Encode(imageBytes);
 
     final body = {
       'contents': [
-        {'parts': parts}
+        {
+          'parts': [
+            {'text': _detectPromptText},
+            {
+              'inline_data': {
+                'mime_type': 'image/jpeg',
+                'data': base64Image,
+              }
+            },
+          ]
+        }
       ],
       'generationConfig': {
         'temperature': 0,
-        'maxOutputTokens': 3000,
+        'maxOutputTokens': 2000,
         'responseMimeType': 'application/json',
       },
     };
@@ -215,7 +255,7 @@ class AiService {
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(body),
         )
-        .timeout(const Duration(seconds: 60));
+        .timeout(const Duration(seconds: 45));
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -235,25 +275,95 @@ class AiService {
     try {
       final parsed = jsonDecode(rawText) as Map<String, dynamic>;
       final findingsJson = parsed['findings'] as List<dynamic>? ?? [];
-      return _dedupeFindings(
-        findingsJson
-            .map((f) => findingFromRegionJson(f as Map<String, dynamic>))
-            .toList(),
-      );
+      return findingsJson.map((f) {
+        final map = f as Map<String, dynamic>;
+        final regionRaw = (map['region'] as String? ?? 'center').toLowerCase();
+        final region = gridRegionNames.contains(regionRaw) ? regionRaw : 'center';
+        return RoughFinding(
+          title: map['title'] as String? ?? 'Issue found',
+          description: map['description'] as String? ?? '',
+          severity: parseSeverity(map['severity']),
+          region: region,
+        );
+      }).toList();
     } catch (e) {
       throw Exception("Could not read the AI's response, please try again.");
     }
   }
 
-  static const String _promptText =
+  static Future<Map<String, List<dynamic>?>> _localizeOnce(
+    CroppedImage crop,
+    List<RoughFinding> findingsInRegion,
+  ) async {
+    final titleList = findingsInRegion
+        .map((f) => '- "${f.title}": ${f.description}')
+        .join('\n');
+
+    final body = {
+      'contents': [
+        {
+          'parts': [
+            {'text': _localizePromptText(titleList)},
+            {
+              'inline_data': {
+                'mime_type': 'image/jpeg',
+                'data': crop.base64Jpeg,
+              }
+            },
+          ]
+        }
+      ],
+      'generationConfig': {
+        'temperature': 0,
+        'maxOutputTokens': 1000,
+        'responseMimeType': 'application/json',
+      },
+    };
+
+    final response = await http
+        .post(
+          Uri.parse('$_base/analyzeImage'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(body),
+        )
+        .timeout(const Duration(seconds: 45));
+
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+
+    if (response.statusCode != 200) {
+      final errMsg = data['error']?.toString() ?? 'Unknown error';
+      if (_looksLikeQuotaError(errMsg)) {
+        throw Exception('experiencing high demand');
+      }
+      throw Exception(errMsg);
+    }
+
+    final rawText = _extractText(data);
+    if (rawText == null || rawText.isEmpty) {
+      throw Exception('experiencing high demand');
+    }
+
+    try {
+      final parsed = jsonDecode(rawText) as Map<String, dynamic>;
+      final boxesJson = parsed['boxes'] as List<dynamic>? ?? [];
+      final result = <String, List<dynamic>?>{};
+      for (final b in boxesJson) {
+        final map = b as Map<String, dynamic>;
+        final title = (map['title'] as String? ?? '').trim().toLowerCase();
+        if (title.isEmpty) continue;
+        result[title] = map['box_2d'] as List<dynamic>?;
+      }
+      return result;
+    } catch (e) {
+      return {};
+    }
+  }
+
+  static const String _detectPromptText =
       'You are helping a FRC (FIRST Robotics Competition) team do a quick '
       'visual check of their robot before a real inspection. Your job is to '
       'point out things worth a closer look, not to give a final verdict on '
-      'safety or compliance. Inspect every visible robot area carefully. '
-      'The photo is split into 9 overlapping crops, each labeled with a '
-      '"Region:" tag immediately before its image (top-left, top-center, '
-      'top-right, middle-left, center, middle-right, bottom-left, '
-      'bottom-center, bottom-right).\n\n'
+      'safety or compliance. Look at the whole photo carefully.\n\n'
       'Look for things like exposed conductors or damaged insulation, '
       'loose or unsecured wiring, loose connectors, unprotected battery '
       'terminals, loose or missing fasteners, cracked or bent frame '
@@ -271,21 +381,40 @@ class AiService {
       'describe specifically. If you are not confident something is an '
       'issue, phrase it as something to double check rather than a '
       'confirmed problem.\n\n'
-      'Return an empty findings list ONLY when the photo is clear enough '
-      'to inspect and you see nothing worth a closer look. If the image is '
-      'too dark, blurry, obstructed, or too distant for a meaningful '
-      'check, return one item titled "Photo quality prevents inspection" '
-      'instead of returning an empty list. Since crops overlap, report a '
-      'real issue only once, using the clearest crop and setting "region" '
-      'to that crop\'s label. For box_2d, use Gemini\'s standard format: '
-      '[ymin, xmin, ymax, xmax], each 0–1000, relative to THAT CROP (not '
-      'the full photo). Respond only with JSON in this exact format:\n\n'
-      '{"findings":[{"region":"top-left","title":"short label for what to '
-      'check","description":"one or two sentence explanation of what to '
-      'look at and why","severity":"critical|warning|ok","box_2d":'
+      'For each thing you flag, say roughly where it is in the photo using '
+      'one of these nine labels: top-left, top-center, top-right, '
+      'middle-left, center, middle-right, bottom-left, bottom-center, '
+      'bottom-right. Give each finding a short, specific title, since it '
+      'will be used later to match against a zoomed-in crop, so titles must '
+      'be unique and distinct from each other.\n\n'
+      'Return an empty findings list ONLY when the photo is clear enough to '
+      'inspect and you see nothing worth a closer look. If the image is too '
+      'dark, blurry, obstructed, or too distant for a meaningful check, '
+      'return one item titled "Photo quality prevents inspection" with '
+      'region "center" instead of returning an empty list. Respond only '
+      'with JSON in this exact format:\n\n'
+      '{"findings":[{"title":"short specific issue name","description":'
+      '"one or two sentence explanation of what to look at and why",'
+      '"severity":"critical|warning|ok","region":"top-left"}]}\n\n'
+      'If nothing stands out, return {"findings":[]}.';
+
+  static String _localizePromptText(String titleList) =>
+      'You are looking at a zoomed-in crop of a larger robot photo. A '
+      'previous pass identified these possible issues as being roughly in '
+      'this area of the photo:\n\n$titleList\n\n'
+      'For each one, look carefully in THIS crop and, if you can actually '
+      'see it, give its exact bounding box within this crop. If you cannot '
+      'find a specific one of these in this crop, leave it out entirely, '
+      'do not guess a box for it. Do not add any new issues that were not '
+      'in the list above.\n\n'
+      'For box_2d, use Gemini\'s standard format: [ymin, xmin, ymax, xmax], '
+      'each 0–1000, relative to THIS CROP. Match each box back to its exact '
+      'title from the list above. Respond only with JSON in this exact '
+      'format:\n\n'
+      '{"boxes":[{"title":"short specific issue name","box_2d":'
       '[0,0,0,0]}]}\n\n'
-      'Omit "box_2d" entirely if you cannot localize the issue within its '
-      'crop. If nothing stands out, return {"findings":[]}.';
+      'If none of the listed issues are visible in this crop, return '
+      '{"boxes":[]}.';
 
   static bool _looksLikeQuotaError(String msg) {
     final lower = msg.toLowerCase();
@@ -327,12 +456,75 @@ ScanStatus parseSeverity(dynamic value) {
   return ScanStatus.ok;
 }
 
+int severityRank(ScanStatus s) {
+  switch (s) {
+    case ScanStatus.critical:
+      return 2;
+    case ScanStatus.warning:
+      return 1;
+    case ScanStatus.ok:
+      return 0;
+  }
+}
+
+double boxOverlapRatio(BoundingBox? a, BoundingBox? b) {
+  if (a == null || b == null) return 0.0;
+
+  final interLeft = a.x > b.x ? a.x : b.x;
+  final interTop = a.y > b.y ? a.y : b.y;
+  final interRight =
+      (a.x + a.width) < (b.x + b.width) ? (a.x + a.width) : (b.x + b.width);
+  final interBottom = (a.y + a.height) < (b.y + b.height)
+      ? (a.y + a.height)
+      : (b.y + b.height);
+
+  final interWidth = interRight - interLeft;
+  final interHeight = interBottom - interTop;
+  if (interWidth <= 0 || interHeight <= 0) return 0.0;
+
+  final interArea = interWidth * interHeight;
+  final aArea = a.width * a.height;
+  final bArea = b.width * b.height;
+  final unionArea = aArea + bArea - interArea;
+  if (unionArea <= 0) return 0.0;
+
+  return interArea / unionArea;
+}
+
+List<Finding> mergeOverlappingFindings(
+  List<Finding> findings, {
+  double overlapThreshold = 0.3,
+}) {
+  final used = List<bool>.filled(findings.length, false);
+  final merged = <Finding>[];
+
+  for (var i = 0; i < findings.length; i++) {
+    if (used[i]) continue;
+    used[i] = true;
+    var best = findings[i];
+
+    for (var j = i + 1; j < findings.length; j++) {
+      if (used[j]) continue;
+      if (boxOverlapRatio(best.box, findings[j].box) >= overlapThreshold) {
+        used[j] = true;
+        if (severityRank(findings[j].severity) > severityRank(best.severity)) {
+          best = findings[j];
+        }
+      }
+    }
+
+    merged.add(best);
+  }
+
+  return merged;
+}
+
 List<Finding> _dedupeFindings(List<Finding> findings) {
   final seenTitles = <String>{};
-  final result = <Finding>[];
+  final byTitle = <Finding>[];
   for (final f in findings) {
     final key = f.title.trim().toLowerCase();
-    if (seenTitles.add(key)) result.add(f);
+    if (seenTitles.add(key)) byTitle.add(f);
   }
-  return result;
+  return mergeOverlappingFindings(byTitle);
 }
