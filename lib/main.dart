@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'rules_screen.dart';
-import 'custom_cursor_overlay.dart';
 
 void main() => runApp(const RoboLensApp());
 
@@ -22,7 +21,6 @@ class RoboLensApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFFF8FFFE),
       ),
-      builder: (context, child) => CustomCursorOverlay(child: child!),
       home: const HomeScreen(),
     );
   }
