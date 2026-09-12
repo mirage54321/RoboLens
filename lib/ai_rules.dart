@@ -9,12 +9,13 @@ import 'retry_helper.dart';
 import 'connectivity_check.dart';
 import 'ai_scan.dart'
     show
-        gridRegionNames,
         CropRegion,
         CroppedImage,
         cropToRegion,
+        regionAroundPoint,
         mapBoxFromCropToFull,
         parseSeverity,
+        scaleCoord,
         mergeOverlappingFindings,
         RoughFinding,
         RetryCallback;
@@ -59,35 +60,26 @@ class AiRulesService {
 
     if (roughFindings.isEmpty) return [];
 
-    final byRegion = <String, List<RoughFinding>>{};
-    for (final f in roughFindings) {
-      byRegion.putIfAbsent(f.region, () => []).add(f);
-    }
-
     final located = <Finding>[];
-    for (final entry in byRegion.entries) {
-      final region = CropRegion.fromRegionName(entry.key);
+    for (final f in roughFindings) {
+      final region = regionAroundPoint(f.centerX, f.centerY);
       final crop = cropToRegion(imageBytes, region);
 
-      final boxesByTitle = await withBackoffRetry<Map<String, List<dynamic>?>>(
-        () => _localizeOnce(crop, entry.value),
+      final box2d = await withBackoffRetry<List<dynamic>?>(
+        () => _localizeOnce(crop, f),
         maxAttempts: maxAttempts,
         initialDelay: const Duration(seconds: 3),
         isRetryable: isHighDemandError,
         onRetry: onRetry,
       );
 
-      for (final f in entry.value) {
-        final key = f.title.trim().toLowerCase();
-        final box2d = boxesByTitle[key];
-        located.add(Finding(
-          title: f.title,
-          description: f.description,
-          severity: f.severity,
-          box: mapBoxFromCropToFull(box2d, region),
-          isReported: false,
-        ));
-      }
+      located.add(Finding(
+        title: f.title,
+        description: f.description,
+        severity: f.severity,
+        box: mapBoxFromCropToFull(box2d, region),
+        isReported: false,
+      ));
     }
 
     return _dedupeFindings(located);
@@ -155,13 +147,15 @@ class AiRulesService {
       final findingsJson = parsed['findings'] as List<dynamic>? ?? [];
       return findingsJson.map((f) {
         final map = f as Map<String, dynamic>;
-        final regionRaw = (map['region'] as String? ?? 'center').toLowerCase();
-        final region = gridRegionNames.contains(regionRaw) ? regionRaw : 'center';
+        final point = map['point'] as List<dynamic>?;
+        final centerY = point != null && point.length == 2 ? scaleCoord(point[0]) : 0.5;
+        final centerX = point != null && point.length == 2 ? scaleCoord(point[1]) : 0.5;
         return RoughFinding(
           title: map['title'] as String? ?? 'Issue found',
           description: map['description'] as String? ?? '',
           severity: parseSeverity(map['severity']),
-          region: region,
+          centerX: centerX,
+          centerY: centerY,
         );
       }).toList();
     } catch (e) {
@@ -169,19 +163,15 @@ class AiRulesService {
     }
   }
 
-  static Future<Map<String, List<dynamic>?>> _localizeOnce(
+  static Future<List<dynamic>?> _localizeOnce(
     CroppedImage crop,
-    List<RoughFinding> findingsInRegion,
+    RoughFinding finding,
   ) async {
-    final titleList = findingsInRegion
-        .map((f) => '- "${f.title}": ${f.description}')
-        .join('\n');
-
     final body = {
       'contents': [
         {
           'parts': [
-            {'text': _localizePromptText(titleList)},
+            {'text': _localizePromptText(finding.title, finding.description)},
             {
               'inline_data': {
                 'mime_type': 'image/jpeg',
@@ -193,7 +183,7 @@ class AiRulesService {
       ],
       'generationConfig': {
         'temperature': 0,
-        'maxOutputTokens': 1000,
+        'maxOutputTokens': 300,
         'responseMimeType': 'application/json',
       },
     };
@@ -204,7 +194,7 @@ class AiRulesService {
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(body),
         )
-        .timeout(const Duration(seconds: 45));
+        .timeout(const Duration(seconds: 30));
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -223,17 +213,9 @@ class AiRulesService {
 
     try {
       final parsed = jsonDecode(rawText) as Map<String, dynamic>;
-      final boxesJson = parsed['boxes'] as List<dynamic>? ?? [];
-      final result = <String, List<dynamic>?>{};
-      for (final b in boxesJson) {
-        final map = b as Map<String, dynamic>;
-        final title = (map['title'] as String? ?? '').trim().toLowerCase();
-        if (title.isEmpty) continue;
-        result[title] = map['box_2d'] as List<dynamic>?;
-      }
-      return result;
+      return parsed['box_2d'] as List<dynamic>?;
     } catch (e) {
-      return {};
+      return null;
     }
   }
 
@@ -244,7 +226,9 @@ class AiRulesService {
       'each season. Your job is to point out things worth double checking '
       'against the rulebook, not to give a final ruling on legality. Do '
       'not say a robot is compliant, and do not say a robot is in '
-      'violation, only that something looks worth a closer look.\n\n'
+      'violation, only that something looks worth a closer look. The '
+      'photo may have a lot of plain background around the robot, so look '
+      'carefully at where the robot itself actually is.\n\n'
       'Only check things that can actually be judged from a static photo: '
       'bumper presence, bumper color and numbering, bumper height and '
       'coverage as visible, and whether the visible outline of the robot '
@@ -255,41 +239,35 @@ class AiRulesService {
       'judged from what is visible in this single photo, do not comment '
       'on it.\n\n'
       'Cite the specific rule number when the manual supports it. For each '
-      'thing you flag, say roughly where it is in the photo using one of '
-      'these nine labels: top-left, top-center, top-right, middle-left, '
-      'center, middle-right, bottom-left, bottom-center, bottom-right. '
-      'Give each finding a short, specific title, since it will be used '
-      'later to match against a zoomed-in crop, so titles must be unique '
-      'and distinct from each other.\n\n'
+      'thing you flag, give its approximate center point ON THE ROBOT '
+      'ITSELF (not the background) as "point":[y,x], each 0-1000, '
+      'relative to the full photo, using Gemini\'s standard point format. '
+      'Give each finding a short, specific title.\n\n'
       'Return an empty findings list ONLY if the image is clear enough to '
       'check the items above and nothing looks worth a closer look. If '
       'the image is too dark, blurry, obstructed, or too distant to check '
       'bumpers or frame perimeter, return one item titled "Photo quality '
-      'prevents rule check" with region "center" rather than an empty '
+      'prevents rule check" with point [500,500] rather than an empty '
       'list. Respond only with JSON in this exact format:\n\n'
       '{"findings":[{"title":"short specific issue name","description":'
       '"one or two sentence explanation of what to double check, cite '
       'rule number if applicable","severity":"critical|warning|ok",'
-      '"region":"top-left"}]}\n\n'
+      '"point":[500,500]}]}\n\n'
       'If nothing looks worth checking, return {"findings":[]}.';
 
-  static String _localizePromptText(String titleList) =>
-      'You are looking at a zoomed-in crop of a larger robot photo. A '
-      'previous pass identified these possible items to double check as '
-      'being roughly in this area of the photo:\n\n$titleList\n\n'
-      'For each one, look carefully in THIS crop and, if you can actually '
-      'see it, give its exact bounding box within this crop. If you cannot '
-      'find a specific one of these in this crop, leave it out entirely, '
-      'do not guess a box for it. Do not add any new issues that were not '
-      'in the list above.\n\n'
+  static String _localizePromptText(String title, String description) =>
+      'You are looking at a zoomed-in crop of a larger robot photo, '
+      'centered on where a possible item to double check was spotted:\n\n'
+      'Title: "$title"\nDescription: $description\n\n'
+      'If you can actually see this specific item somewhere in this crop, '
+      'give its exact bounding box within this crop. If you cannot find it '
+      'in this crop, respond with box_2d as null, do not guess.\n\n'
       'For box_2d, use Gemini\'s standard format: [ymin, xmin, ymax, xmax], '
-      'each 0–1000, relative to THIS CROP. Match each box back to its exact '
-      'title from the list above. Respond only with JSON in this exact '
-      'format:\n\n'
-      '{"boxes":[{"title":"short specific issue name","box_2d":'
-      '[0,0,0,0]}]}\n\n'
-      'If none of the listed items are visible in this crop, return '
-      '{"boxes":[]}.';
+      'each 0–1000, relative to THIS CROP. Respond only with JSON in this '
+      'exact format:\n\n'
+      '{"box_2d":[0,0,0,0]}\n\n'
+      'or, if not visible in this crop:\n\n'
+      '{"box_2d":null}';
 
   static bool _looksLikeQuotaError(String msg) {
     final lower = msg.toLowerCase();
