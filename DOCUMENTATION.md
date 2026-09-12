@@ -434,3 +434,45 @@ Fixed it by adding a listener that actually watches for that error state, cleans
 Live app: https://mirage54321.github.io/RoboLens/
 
 ![alt text](photos/IMG_9125.PNG)
+
+
+## Post to Chief Delphi
+RoboLens Toolkit. AI robot inspection, rules checking, battery tracker, and live match stats
+
+Hey everyone! I built a toolkit for FRC teams. It's still a prototype so I'm mainly looking for testing and feedback right now, but it is live on GitHub Pagess if you want to try it.
+
+https://mirage54321.github.io/RoboLens/
+
+There are four tools so far:
+
+Scan for issues: photo of your robot, a gemini AI model flags wiring, loose screws, bent frame parts, etc.
+Check FRC rules: same idea, but checks your photo against the actual game manual for bumper compliance, frame perimeter, wiring rules.
+Battery tracker: shared team log for which batteries are charged, in use, or flagged. Guest mode lets anyone check status read only with just a team number.
+Team Stats & Match Center: pulls from The Blue Alliance and FRC Events API for a season wide team rating, live match info, an events browser, and a matchup simulator with win probabilities. You can also add your team for notifications before their matches (kind of like Nexus).
+
+I used Flutter on GitHub Pages, Node/Express and MongoDB on Render, TBA and FRC Events APIs for data.
+
+This is a solo project I made, so bug reports and feature requests are very welcome. If you do check it out, reply here if you notice anything!
+
+**Chief Delphi feedback, summary:**
+
+- **Icanari** tested it on 2 photos, both wrong. Flagged issues that weren't real, and worst of all, mislabeled a safety light as an "emergency stop button," a dangerous mistake.
+- **Tristan_Lall** argued rules compliance isn't clean pass/fail, a confident verdict tool oversimplifies real judgment calls, and using it could shortcut a team's own skill-building.
+- **philso** listed specific things a photo can't catch: obscured wiring, hidden connections, full range-of-motion checks, look-alike illegal parts. Also pointed out a circularity issue, if you know what to photograph, you already know the problem.
+
+**What you learned:**
+- The AI pipeline may be hallucinating findings, not just being imprecise.
+- The rules checker's "photo in, verdict out" idea has real, structural blind spots, not just bugs.
+- Confident-sounding output is risky even if accuracy improves.
+
+**Focus next:**
+1. Fix or contain the safety-related mislabeling first.
+2. Soften language: "possible issues to check" instead of confident findings.
+3. Scope the rules checker down to only what's actually photo-verifiable.
+
+
+## Devlog #24 ->
+Alright, so I took a shot to the moon and posted on Chief Delphi. I got some really really helpful specific feedback but it made me a little sad how it has a lot of issues. 
+
+## Devlog #25 ->
+I tried searching up the name of my app for giggles and turns out a lot of things are named RoboLens. I spent this whole time changing the name to Marble. Kind of random I know. I'm a little sad but it's okay! I think I like this name more anyway.
