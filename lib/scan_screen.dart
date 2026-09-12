@@ -354,7 +354,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
   Widget hint2() {
     return Text(
-      'This tool uses AI to scan for wiring issues, cracks, misalignment, and more!\n\nPlease note that the AI may not catch every issue, and it is always recommended to perform a manual inspection as well.',
+      'This tool uses AI to point out things worth a closer look, like wiring, cracks, or misalignment.\n\nIt does not give a final safety verdict and can miss or misread things. Always do a manual inspection too, and never rely on it to identify what a button, light, or switch does.',
       textAlign: TextAlign.center,
       style: TextStyle(fontSize: 12, color: Colors.grey[500], height: 1.5),
     );

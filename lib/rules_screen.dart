@@ -409,7 +409,7 @@ class _RulesScreenState extends State<RulesScreen> {
 
   Widget hint() {
     return Text(
-      'This tool uses AI to check your robot against the $year FRC game manual! \n\nPlease note that this tool is not a replacement for a real inspection and may not catch all issues. Always consult the official FRC rules and your local inspectors for final decisions.',
+      'This tool uses AI to flag things worth double checking against the $year FRC game manual, limited to what a photo can actually show, like bumpers and frame perimeter. \n\nIt does not give a final ruling on legality and is not a replacement for a real inspection. Always consult the official FRC rules and your local inspectors for final decisions.',
       textAlign: TextAlign.center,
       style: TextStyle(fontSize: 12, color: Colors.grey[500], height: 1.5),
     );

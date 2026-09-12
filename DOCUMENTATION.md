@@ -472,7 +472,21 @@ This is a solo project I made, so bug reports and feature requests are very welc
 
 
 ## Devlog #24 ->
-Alright, so I took a shot to the moon and posted on Chief Delphi. I got some really really helpful specific feedback but it made me a little sad how it has a lot of issues. 
+Took a shot to the moon and posted on Chief Delphi. Got really specific, really helpful feedback but it made me a little sad, turns out both AI tools have real issues lol.
+Icanari actually tested two robot photos and both scans came back wrong. Even flagged a robot's signal light as an "unused emergency stop button," which is actually dangerous if a team believed it. Tristan_Lall and philso both pointed out that the rules checker's whole idea is kinda flawed too, a lot of what actually matters (obscured wiring, full range of motion stuff) just isn't visible in a photo at all.
+Stung a bit to read but honestly this is exactly why I posted there.
+What I'm fixing:
+Both AI prompts now say "worth double checking" instead of giving a confident verdict
+No more guessing what a button/light/switch is, ever
+Rules checker only checks stuff actually visible in a photo now (bumpers, frame perimeter), dropped the rest
+Updated the hint text to be upfront about limits
+
+P.S. not many commits on my GitHub right now because I remembered I can just run flutter build web locally to test changes instead of pushing every little tweak lol, so there's gonna be one big commit instead of 100 tiny ones.
+
+Also thinking about renaming since RoboLens is already taken by other stuff...
+![alt text](photos/image41.png)
+![alt text](<photos/issue.jpeg>)
+
 
 ## Devlog #25 ->
 I tried searching up the name of my app for giggles and turns out a lot of things are named RoboLens. I spent this whole time changing the name to Marble. Kind of random I know. I'm a little sad but it's okay! I think I like this name more anyway.
