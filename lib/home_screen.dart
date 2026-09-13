@@ -16,8 +16,7 @@ const grayConstant = Color.fromARGB(255, 204, 204, 204);
 const orangeConstant = Color.fromARGB(255, 255, 160, 7);
 const pinkConstantLight = Color(0xFFFFE4F0);
 const yellowConstantLight = Color(0xFFFFF4E5);
-
-const reportEmail = 'mira.j.maroni@gmail.com';
+const reportEmail = 'maronimira5@gmail.com';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -131,7 +130,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Column(
               children: [
-                top(context),
+                //top(context),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
@@ -192,46 +191,46 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget top(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-      child: Row(
-        children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: grayConstant,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: Image.asset(
-              'web/icons/Icon-200.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 8),
-          RichText(
-            text: const TextSpan(
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black),
-              children: [
-                TextSpan(text: 'Robo'),
-                TextSpan(text: 'L', style: TextStyle(color: pinkConstant)),
-                TextSpan(text: 'e', style: TextStyle(color: TealScan)),
-                TextSpan(text: 'n', style: TextStyle(color: yellowConstant)),
-                TextSpan(text: 's', style: TextStyle(color: orangeConstant)),
-              ],
-            ),
-          ),
-          const Spacer(),
-        ],
-      ),
-    );
-  }
+  // Widget top(BuildContext context) {
+  //   return Container(
+  //     color: Colors.white,
+  //     padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+  //     child: Row(
+  //       children: [
+  //         Container(
+  //           width: 32,
+  //           height: 32,
+  //           decoration: BoxDecoration(
+  //             color: grayConstant,
+  //             borderRadius: BorderRadius.circular(10),
+  //           ),
+  //           clipBehavior: Clip.antiAlias,
+  //           child: Image.asset(
+  //             'web/icons/Icon-111.png',
+  //             fit: BoxFit.cover,
+  //           ),
+  //         ),
+  //         const SizedBox(width: 8),
+  //         RichText(
+  //           text: const TextSpan(
+  //             style: TextStyle(
+  //                 fontSize: 18,
+  //                 fontWeight: FontWeight.w500,
+  //                 color: Colors.black),
+  //             children: [
+  //               TextSpan(text: 'Robo'),
+  //               TextSpan(text: 'L', style: TextStyle(color: pinkConstant)),
+  //               TextSpan(text: 'e', style: TextStyle(color: TealScan)),
+  //               TextSpan(text: 'n', style: TextStyle(color: yellowConstant)),
+  //               TextSpan(text: 's', style: TextStyle(color: orangeConstant)),
+  //             ],
+  //           ),
+  //         ),
+  //         const Spacer(),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget welcome() {
     return Padding(
@@ -392,5 +391,7 @@ class HomeScreen extends StatelessWidget {
       ctaTextColor: orangeConstant,
       icon: Icons.bar_chart,
     );
+    
   }
+  
 }

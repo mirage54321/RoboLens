@@ -9,8 +9,8 @@ self.addEventListener('push', function (event) {
   const title = data.title || 'Match starting soon';
   const options = {
     body: data.body || '',
-    icon: data.icon || 'icons/Icon-200.png',
-    badge: data.badge || 'icons/Icon-200.png',
+    icon: data.icon || 'icons/Icon-111.png',
+    badge: data.badge || 'icons/Icon-111.png',
     data: { url: data.url || '/' },
     tag: data.tag,
     renotify: Boolean(data.renotify),
