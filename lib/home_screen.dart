@@ -116,7 +116,7 @@ class HomeScreen extends StatelessWidget {
       scheme: 'mailto',
       path: reportEmail,
       query:
-          'subject=${Uri.encodeComponent('RoboLens error report')}&body=${Uri.encodeComponent(body)}',
+          'subject=${Uri.encodeComponent('Marble error report')}&body=${Uri.encodeComponent(body)}',
     );
 
     await launchUrl(uri);

@@ -264,7 +264,7 @@ function fakeResolvedDate(oldDateStr) {
 function fakeEvent() {
   return {
     key: FAKE_EVENT_KEY,
-    name: 'RoboLens Test Event \u2014 Pikes Peak Regional replay (fake, team -4388 only)',
+    name: 'Marble Test Event \u2014 Pikes Peak Regional replay (fake, team -4388 only)',
     start_date: fakeResolvedDate('2026-08-24'),
     end_date: fakeResolvedDate('2026-08-26'),
     city: 'Colorado Springs',
@@ -1546,7 +1546,7 @@ app.post('/push/subscribe', async (req, res) => {
     try {
       testSent = await sendPushBurst(
       { subscription, platform },
-      { title: 'RoboLens alerts are on', body: `You will get a reminder before Team ${teamNumber}'s matches.`, url: '/' },
+      { title: 'Marble alerts are on', body: `You will get a reminder before Team ${teamNumber}'s matches.`, url: '/' },
       `confirm:${teamNumber}:${eventKey}`
       );
     } catch (err) {

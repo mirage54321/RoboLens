@@ -50786,7 +50786,7 @@ aoC(a){var s=0,r=A.w(t.H),q
 var $async$Cx=A.x(function(b,c){if(b===1)return A.t(c,r)
 for(;;)switch(s){case 0:q=a.length===0?"Describe what happened here.":a
 s=2
-return A.o(A.aPo(A.Mf(null,"mira.j.maroni@gmail.com","subject="+A.Al(2,"RoboLens error report",B.ah,!1)+"&body="+A.Al(2,q,B.ah,!1),null,"mailto")),$async$Cx)
+return A.o(A.aPo(A.Mf(null,"mira.j.maroni@gmail.com","subject="+A.Al(2,"Marble error report",B.ah,!1)+"&body="+A.Al(2,q,B.ah,!1),null,"mailto")),$async$Cx)
 case 2:return A.u(null,r)}})
 return A.v($async$Cx,r)},
 M(a){var s,r,q,p=this,o=null,n=A.as(10),m=t.p
@@ -50857,7 +50857,7 @@ A.aeo.prototype={
 $1(a){return B.Yd},
 $S:694}
 A.U7.prototype={
-M(a){return new A.Eq(B.LH,"RoboLens",A.yM(null,null,B.bh,B.pZ,!0),!1,null)}}
+M(a){return new A.Eq(B.LH,"Marble",A.yM(null,null,B.bh,B.pZ,!0),!1,null)}}
 A.akI.prototype={
 ga5v(){var s=this.d,r=A.a_(s).i("aE<1>")
 s=A.M(new A.aE(s,new A.akJ(this),r),r.i("l.E"))
@@ -51802,9 +51802,9 @@ if(a.e==null){s=1
 break}o=a.ah(t.J).f
 A:{if("subscribed"===p){n="Match alerts on for Team "+l.a
 break A}if("unsubscribed"===p){n="Match alerts turned off"
-break A}if("ios-install-required"===p){n='On iPhone, open RoboLens from your Home Screen by clicking the three dots at the bottom right corner. Then click all "share", and scroll down to find "Add to Home Screen". You can turn alerts on there.'
-break A}if("permission-denied"===p){n="Notifications are blocked. Enable them for RoboLens in iPhone Settings, then try again."
-break A}if("server-not-configured"===p){n="Alerts are not configured on the RoboLens server yet."
+break A}if("ios-install-required"===p){n='On iPhone, open Marble from your Home Screen by clicking the three dots at the bottom right corner. Then click all "share", and scroll down to find "Add to Home Screen". You can turn alerts on there.'
+break A}if("permission-denied"===p){n="Notifications are blocked. Enable them for Marble in iPhone Settings, then try again."
+break A}if("server-not-configured"===p){n="Alerts are not configured on the Marble server yet."
 break A}if("no-event"===p){n="Choose a competition before enabling match alerts."
 break A}if("unsupported"===p){n="This browser does not support match alerts."
 break A}n="Could not enable alerts. Please try again."
@@ -52680,7 +52680,7 @@ l.Q=null
 l.as=A.b([],t.vl)
 l.z=null}s=j.a
 r=s==null?k:s.a
-s=A.V("Season-wide RoboLens World Rating \xb7 built from TBA event OPRs",k,k,k,k,A.al(k,k,B.Z,k,k,k,k,k,k,k,k,13,k,k,k,k,k,!0,k,k,k,k,k,k,k,k),k,k)
+s=A.V("Season-wide Marble World Rating \xb7 built from TBA event OPRs",k,k,k,k,A.al(k,k,B.Z,k,k,k,k,k,k,k,k,13,k,k,k,k,k,!0,k,k,k,k,k,k,k,k),k,k)
 q=A.as(14)
 p=A.cP(B.o.aU(0.07),-1,1)
 o=t.p
@@ -52690,7 +52690,7 @@ n=p?B.R:B.ai
 m=A.as(14)
 B.c.P(q,A.b([B.by,new A.bX(A.ap(k,A.V("Your team",k,k,k,k,A.al(k,k,p?B.f:B.aa,k,k,k,k,k,k,k,k,12,k,k,B.aA,k,k,!0,k,k,k,k,k,k,k,k),k,k),B.l,k,k,new A.aq(n,k,k,m,k,k,B.r),k,k,k,B.bS,k,k,k),new A.ahp(l,r),k,k)],o))}return A.aR(A.b([new A.aP(B.KQ,A.aR(A.b([B.a97,B.bI,s,B.c8,A.b4(q,B.p,B.k,B.m,0)],o),B.E,B.k,B.m),k),A.bP(l.axH(a,r),1)],o),B.p,B.k,B.m)},
 axH(a,b){var s,r=this,q=null,p=r.e
-if(p==null)return A.de(new A.aP(B.cZ,A.V("Loading the RoboLens World Rating\u2026",q,q,q,q,A.al(q,q,B.Z,q,q,q,q,q,q,q,q,q,q,q,q,q,q,!0,q,q,q,q,q,q,q,q),B.aO,q),q),q,q)
+if(p==null)return A.de(new A.aP(B.cZ,A.V("Loading the Marble World Rating\u2026",q,q,q,q,A.al(q,q,B.Z,q,q,q,q,q,q,q,q,q,q,q,q,q,q,!0,q,q,q,q,q,q,q,q),B.aO,q),q),q,q)
 if(r.r===B.Fj){if(r.y)return B.dr
 p=r.z
 if(p!=null)return A.de(new A.aP(B.L1,A.V(p,q,q,q,q,A.al(q,q,B.Z,q,q,q,q,q,q,q,q,q,q,q,q,q,q,!0,q,q,q,q,q,q,q,q),B.aO,q),q),q,q)

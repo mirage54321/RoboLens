@@ -1,10 +1,10 @@
-# RoboLens
+# Marble
 
 A toolkit built for FRC robotics teams: AI-powered inspection and rules checking, a shared battery tracker, and a live Team Stats & Match Center with match alerts.
 
-**[Try it live!](https://mirage54321.github.io/RoboLens/)**
+**[Try it live!](https://mirage54321.github.io/Marble/)**
 
-This is just the README, **[view full documentation here!](https://github.com/mirage54321/RoboLens/blob/main/DOCUMENTATION.md)**
+This is just the README, **[view full documentation here!](https://github.com/mirage54321/Marble/blob/main/DOCUMENTATION.md)**
 
 **[Look at Stardance project!](https://stardance.hackclub.com/projects/16179)**
 
@@ -12,14 +12,14 @@ This is just the README, **[view full documentation here!](https://github.com/mi
 
 ## What it does
 
-Built for a robotics team with limited hands on deck, RoboLens started as a single AI scanner but has grown into four tools that cover a team's day-to-day needs, from pit-stop checks to competition day logistics:
+Built for a robotics team with limited hands on deck, Marble started as a single AI scanner but has grown into four tools that cover a team's day-to-day needs, from pit-stop checks to competition day logistics:
 
 - **Scan for issues** -> AI vision checks a robot photo for loose or frayed wiring, loose screws, cracked/bent frames, corrosion, and other visible mechanical or electrical problems. Meant to cut down the time it takes to find an issue so your team has more time to actually fix it.
 - **Check FRC rules** -> checks your robot photo against the official FRC game manual (2024-2026 supported) for things like bumper compliance, frame perimeter, and wiring rule violations.
 - **Battery tracker** -> a shared, team-wide log for tracking which batteries are charged, in use, or flagged as weak, so nobody grabs a dead battery mid-match.
 - **Team Stats & Match Center** -> live team info and upcoming matches, a season-wide team rating, an events browser, and a matchup simulator with win probabilities, pulled from The Blue Alliance and the official FRC Events API. Bookmark teams and get push notifications when their matches are coming up, so you don't have to keep checking manually.
 
-How to use it: go to https://mirage54321.github.io/RoboLens/, pick a tool from the home screen, and go from there: upload a photo for scanning/rules, sign in with a team number for batteries, or browse stats and bookmark teams for match alerts.
+How to use it: go to https://mirage54321.github.io/Marble/, pick a tool from the home screen, and go from there: upload a photo for scanning/rules, sign in with a team number for batteries, or browse stats and bookmark teams for match alerts.
 
 ## How the AI works
 

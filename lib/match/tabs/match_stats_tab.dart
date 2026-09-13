@@ -82,7 +82,7 @@ class MatchStatsTabState extends State<MatchStatsTab> {
               ),
               const SizedBox(height: 4),
               Text(
-                'Season-wide RoboLens World Rating · built from TBA event OPRs',
+                'Season-wide Marble World Rating · built from TBA event OPRs',
                 style: TextStyle(fontSize: 13, color: Colors.grey[600]),
               ),
               const SizedBox(height: 14),
@@ -161,7 +161,7 @@ class MatchStatsTabState extends State<MatchStatsTab> {
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Text(
-            'Loading the RoboLens World Rating…',
+            'Loading the Marble World Rating…',
             style: TextStyle(color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),

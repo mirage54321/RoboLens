@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'rules_screen.dart';
 
-void main() => runApp(const RoboLensApp());
+void main() => runApp(const MarbleApp());
 
 const TealScan      = Color(0xFF00B3AC);
 const TealScanLight = Color(0xFFE0F7F6);
 const kPink       = Color(0xFFCF2879);
 
-class RoboLensApp extends StatelessWidget {
-  const RoboLensApp({super.key});
+class MarbleApp extends StatelessWidget {
+  const MarbleApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'RoboLens',
+      title: 'Marble',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorSchemeSeed: const Color(0xFF00B3AC),

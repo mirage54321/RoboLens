@@ -12,13 +12,20 @@ import 'ai_scan.dart'
         CropRegion,
         CroppedImage,
         cropToRegion,
-        regionAroundPoint,
+        clusterFindings,
+        regionForCluster,
         mapBoxFromCropToFull,
         parseSeverity,
         scaleCoord,
         mergeOverlappingFindings,
         RoughFinding,
         RetryCallback;
+
+bool _isRetryableAiError(Object error) {
+  final msg = error.toString();
+  return msg.contains('experiencing high demand') ||
+      msg.contains("Could not read the AI's response");
+}
 
 class AiRulesService {
   static const String _base = 'https://ridgeboticsapp.onrender.com';
@@ -54,32 +61,38 @@ class AiRulesService {
       () => _detectOnce(imageBytes, base64Manual, year),
       maxAttempts: maxAttempts,
       initialDelay: const Duration(seconds: 3),
-      isRetryable: isHighDemandError,
+      isRetryable: _isRetryableAiError,
       onRetry: onRetry,
     );
 
     if (roughFindings.isEmpty) return [];
 
+    final clusters = clusterFindings(roughFindings);
     final located = <Finding>[];
-    for (final f in roughFindings) {
-      final region = regionAroundPoint(f.centerX, f.centerY);
+
+    for (final cluster in clusters) {
+      final region = regionForCluster(cluster);
       final crop = cropToRegion(imageBytes, region);
 
-      final box2d = await withBackoffRetry<List<dynamic>?>(
-        () => _localizeOnce(crop, f),
+      final boxesByTitle = await withBackoffRetry<Map<String, List<dynamic>?>>(
+        () => _localizeOnce(crop, cluster),
         maxAttempts: maxAttempts,
         initialDelay: const Duration(seconds: 3),
-        isRetryable: isHighDemandError,
+        isRetryable: _isRetryableAiError,
         onRetry: onRetry,
       );
 
-      located.add(Finding(
-        title: f.title,
-        description: f.description,
-        severity: f.severity,
-        box: mapBoxFromCropToFull(box2d, region),
-        isReported: false,
-      ));
+      for (final f in cluster) {
+        final key = f.title.trim().toLowerCase();
+        final box2d = boxesByTitle[key];
+        located.add(Finding(
+          title: f.title,
+          description: f.description,
+          severity: f.severity,
+          box: mapBoxFromCropToFull(box2d, region),
+          isReported: false,
+        ));
+      }
     }
 
     return _dedupeFindings(located);
@@ -163,15 +176,18 @@ class AiRulesService {
     }
   }
 
-  static Future<List<dynamic>?> _localizeOnce(
+  static Future<Map<String, List<dynamic>?>> _localizeOnce(
     CroppedImage crop,
-    RoughFinding finding,
+    List<RoughFinding> cluster,
   ) async {
+    final titleList =
+        cluster.map((f) => '- "${f.title}": ${f.description}').join('\n');
+
     final body = {
       'contents': [
         {
           'parts': [
-            {'text': _localizePromptText(finding.title, finding.description)},
+            {'text': _localizePromptText(titleList)},
             {
               'inline_data': {
                 'mime_type': 'image/jpeg',
@@ -183,7 +199,7 @@ class AiRulesService {
       ],
       'generationConfig': {
         'temperature': 0,
-        'maxOutputTokens': 300,
+        'maxOutputTokens': 800,
         'responseMimeType': 'application/json',
       },
     };
@@ -194,7 +210,7 @@ class AiRulesService {
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(body),
         )
-        .timeout(const Duration(seconds: 30));
+        .timeout(const Duration(seconds: 40));
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -213,9 +229,17 @@ class AiRulesService {
 
     try {
       final parsed = jsonDecode(rawText) as Map<String, dynamic>;
-      return parsed['box_2d'] as List<dynamic>?;
+      final boxesJson = parsed['boxes'] as List<dynamic>? ?? [];
+      final result = <String, List<dynamic>?>{};
+      for (final b in boxesJson) {
+        final map = b as Map<String, dynamic>;
+        final title = (map['title'] as String? ?? '').trim().toLowerCase();
+        if (title.isEmpty) continue;
+        result[title] = map['box_2d'] as List<dynamic>?;
+      }
+      return result;
     } catch (e) {
-      return null;
+      throw Exception("Could not read the AI's response, please try again.");
     }
   }
 
@@ -255,19 +279,23 @@ class AiRulesService {
       '"point":[500,500]}]}\n\n'
       'If nothing looks worth checking, return {"findings":[]}.';
 
-  static String _localizePromptText(String title, String description) =>
-      'You are looking at a zoomed-in crop of a larger robot photo, '
-      'centered on where a possible item to double check was spotted:\n\n'
-      'Title: "$title"\nDescription: $description\n\n'
-      'If you can actually see this specific item somewhere in this crop, '
-      'give its exact bounding box within this crop. If you cannot find it '
-      'in this crop, respond with box_2d as null, do not guess.\n\n'
+  static String _localizePromptText(String titleList) =>
+      'You are looking at a zoomed-in crop of a larger robot photo. A '
+      'previous pass identified these possible items to double check as '
+      'being somewhere in this crop:\n\n$titleList\n\n'
+      'For each one, look carefully in THIS crop and, if you can actually '
+      'see it, give its exact bounding box within this crop. If you cannot '
+      'find a specific one of these in this crop, leave it out entirely, '
+      'do not guess a box for it. Do not add any new issues that were not '
+      'in the list above.\n\n'
       'For box_2d, use Gemini\'s standard format: [ymin, xmin, ymax, xmax], '
-      'each 0–1000, relative to THIS CROP. Respond only with JSON in this '
-      'exact format:\n\n'
-      '{"box_2d":[0,0,0,0]}\n\n'
-      'or, if not visible in this crop:\n\n'
-      '{"box_2d":null}';
+      'each 0–1000, relative to THIS CROP. Match each box back to its exact '
+      'title from the list above. Respond only with JSON in this exact '
+      'format:\n\n'
+      '{"boxes":[{"title":"short specific issue name","box_2d":'
+      '[0,0,0,0]}]}\n\n'
+      'If none of the listed items are visible in this crop, return '
+      '{"boxes":[]}.';
 
   static bool _looksLikeQuotaError(String msg) {
     final lower = msg.toLowerCase();

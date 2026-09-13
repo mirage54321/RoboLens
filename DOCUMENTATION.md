@@ -44,7 +44,7 @@ The bigger challenge was AI usage limits. Not "too many messages" though. Instea
 To fix this I... haven't yet, honestly. Still an open problem :(. Hoping to hear from you guys for some ideas!
 I'm a little nervous because AI kind of has a negative connotation in FRC. To address that issue, I'm planning to make the whole app not centered around AI so I'll be adding more tools.
 Excited to keep going though, because I just started programming my new idea: adding a battery tracker!
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/image-2.png)
 ![alt text](photos/image-5.png)
@@ -64,7 +64,7 @@ List of things to work on:
 - Find permanant solution for the AI usage
 - Connenction to MongoDB working for flutter web but not github?
 - Photo to video (that way it can help you find the right orientation for the AI to scan with the best feedback possible)
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
   
 
 ![alt text](photos/image-6.png)
@@ -85,7 +85,7 @@ Now my new top things to work on are:
 - If team is signed up but you don't have access to your team
 - Photo to video (that way it can help you find the right orientation for the AI to scan with the best feedback possible)
 - Report button working better to fix the AI's findings
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 P.S. If you are trying things out you can sign in as a guest for 4388 and see my teams batteries
 
 ![alt text](photos/image-9.png)
@@ -104,7 +104,7 @@ List of current tasks:
 - Report button on the UI needs to feed into the AI ⭐
 - Find solution for Render (takes a long time to power on and first time you try to do anything it always fails)
 - Photo to video (that way it can help you find the right orientation for the AI to scan with the best feedback possible) ⭐⭐
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 
 ![alt text](photos/image-12.png)
@@ -124,7 +124,7 @@ Capture -> stops the frame stream (phone only), takes the picture, reads the byt
 An issue I ran into was camera permissions on iPhone Safari. It worked fine on my laptop but wouldn't work on my phone. I eventually figured out that iPhones are notorious for always requiring explicit permission prompts, so I solved it by requiring the camera request to be triggered by a direct user tap. Basically, I added an "Enable Camera" button on web that only calls the camera setup when tapped, since iOS Safari silently blocks getUserMedia (instead of showing an error) if there's any delay between the tap and the request.
 Now I am working on the flutter comments ("too dark", "focus", etc.) because right now those aren't working. Once I get the live guidance to work, then I will be able to implement an auto-capture (that way the photo is taken when at a good angle).
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/image-17.png)
 ![alt text](photos/image-14.png)
@@ -141,7 +141,7 @@ Next, iOS Safari blocked the camera request outright because it requires permiss
 That introduced two more subtle bugs (a Dart generics issue causing a null-cast crash in the interop code, and a timing issue where the <video> element wasn't in the DOM yet when we went looking for it) both fixed with explicit type arguments and a retry loop.
 With all of that sorted, the guided camera now works consistently across native and web, with live tilt/lighting/sharpness feedback and autocapture.
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/image-18.png)
 ![alt text](photos/image-19.png)
@@ -158,7 +158,7 @@ Things to work on:
 - Find solution for Render (takes a long time to power on and first time you try to do anything it always fails)
 - Adding fourth 'app' ⭐⭐
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/image-20.png)
 
@@ -170,7 +170,7 @@ This seems really complex, and it was. It took me 4 hours (it says 6 on the devl
 Alright, ready for my fourth widget idea.......... a match notifier!! Now don't get too excited. I have more to tell. So, every FRC kid knows that there's a website called Nexus that sends messages for when your game is going to start so you can get in queue, and it works really well. There's also this thing I came across called statbotics, and it calculates many things like EPA, and more (I didn't really stay on that website for too long). So, what I plan to do is combine them. Hopefully, I'm not getting myself into too much of a challenge. This will most definitely be the hardest thing I have ever done on this app. Wish me luck!
 P.S. I started making the fourth widget before the report button then switched to finish the report button halfway so if you see my commits in a confusing order that's why.
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/image-21.png)
 ![alt text](photos/image-22.png)
@@ -183,7 +183,7 @@ The idea came from thinking ahead to the match notifier. If someone wants alerts
 This one was honestly pretty painless compared to my usual chaos. The only annoying part was making sure the bookmarked list actually persisted correctly on web (learned my lesson from the MongoDB flutter-web thing, so I tested this one on both platforms before moving on lol). Turns out shared_preferences just works with localStorage under the hood on web, so no weird surprises this time.
 Short devlog, I know, but wait till you see what devlog #11 turned into.
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/image-23.png)
 ![alt text](photos/image-24.png)
@@ -205,7 +205,7 @@ Debugging this was rough because half the errors happen silently in the service 
 It works now though! Bookmark a team, subscribe, and you'll get pinged. Native (phone-installed) push notifications are still a "later" problem since that needs a totally different setup (probably Firebase Cloud Messaging), so for now the stub just returns unsupported on native and I'm keeping my scope to web.
 Two devlogs about the 4th app itself coming up next, promise.
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 P.S. For right now there are 3 notifications that send for iOS I plan to change that though!
 
@@ -230,7 +230,7 @@ Getting match data to actually parse right from TBA's JSON took a minute (comp l
 
 Devlog #13 is basically a straight continuation of this one, mostly bug stories and the simulator, so heads up on that.
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/image-26.png)
 ![alt text](photos/image-27.png)
@@ -252,7 +252,7 @@ Also went back and hooked the push notification bell (from devlog #11) directly 
 
 Genuinely didn't expect the 4th app to take this many devlogs but here we are. One more to wrap up some small stuff and then I think I'm caught up!
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 ![alt text](<photos/Screenshot 2026-08-30 223221.png>)
 ![alt text](<photos/Screenshot 2026-08-30 223246.png>)r
@@ -287,7 +287,7 @@ Current problems / what's next:
 
 Future ideas: team tracker, public chat for teams, judging/interview prep tool, callout tool, round robin generator
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/image-30.png)
 ![alt text](photos/image-31.png)
@@ -325,7 +325,7 @@ Current problems / what's next:
 ## Devlog #18 ->
 Okay, super short devlog just to explain what I am doing. Basically all my hours are spent on fixing the notifications. It is super annoying right now because I am trying to finalize my project and the notifications randomly stop working. I tried clearing out mongoDB and checking on my cron-job and those seem to be working just fine. I'm not sure what to do. I pushed the hours up (for the practice day so I can check it earlier) and redeployed with Render. I shall see tomorrow if it works.
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 
 ![alt text](photos/image-37.png)
@@ -341,7 +341,7 @@ My issues to work on are:
 - Low MongoDB storage for free account
 - Professionalizing (now just looking back over and seeing if there is anything I wanna fix before putting on chief delphi)
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 
 ![alt text](<photos/Screenshot 2026-09-05 232913.png>)
@@ -354,7 +354,7 @@ View it here: https://mirage54321.github.io/RoboLens/
 Notifications are working again! Basically, the rebuilding of Render helped fix the issue which is kind of ragebait. I'm getting a little nervous though because I wonder what happens if someone doesn't reopen the bookmark (because that is how it resets). Would they still get the messages? Will it update automatically?
 Overall, it works great. I just worry there may be an error that arises (that is a risk with any project honestly). 
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/image-38.png)
 
@@ -367,14 +367,14 @@ Woop woop! Okay, now on these past few days I have been working on getting as ma
 Now, programatically I have been working on removing the 3 burst messages for iPhone (it wouldn't compact itself on the Apple homescreen).
 FYI: 90% of the time for this was spent removing the 3 burst messages for iPhone and writing Ship #2... so you better be ready for Ship 2!
 
-View it here: https://mirage54321.github.io/RoboLens/
+View it here: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/image-39.png)
 
 ## Ship #2 - > 
 What did I make?
 
-Since Ship #1, RoboLens grew from one AI scanner into four connected tools. I added a rules checker that reads the actual FRC game manual (2024–2026) alongside your robot photo so it's grounded in real rules instead of guessing. I built out a full shared battery tracker. I added a guided camera that walks you through lighting/tilt/framing and auto-captures once the angle looks right. And the biggest addition: a Team Stats & Match Center with four tabs (My Team, Stats, Events, Sim) pulling live data from The Blue Alliance and the FRC Events API, including a season-wide "World Rating," a matchup simulator with win probabilities, and bookmarking teams to get real push notifications before their matches.
+Since Ship #1, Marble grew from one AI scanner into four connected tools. I added a rules checker that reads the actual FRC game manual (2024–2026) alongside your robot photo so it's grounded in real rules instead of guessing. I built out a full shared battery tracker. I added a guided camera that walks you through lighting/tilt/framing and auto-captures once the angle looks right. And the biggest addition: a Team Stats & Match Center with four tabs (My Team, Stats, Events, Sim) pulling live data from The Blue Alliance and the FRC Events API, including a season-wide "World Rating," a matchup simulator with win probabilities, and bookmarking teams to get real push notifications before their matches.
 
 I also spent a lot of time on stuff that doesn't show up as a "feature" but makes the app actually usable: a queue + exponential backoff + retry system so the shared free-tier Gemini key doesn't randomly fail scans under load, a report button that feeds recurring AI mistakes back into future scans, offline detection so scans fail fast instead of hanging, and a new instant-loading splash screen.
 
@@ -392,7 +392,7 @@ Going from a single-purpose AI scanner to four genuinely useful, connected tools
 
 What should people know so they can test your project?
 
-Live app: https://mirage54321.github.io/RoboLens/
+Live app: https://mirage54321.github.io/Marble/
 You can log in as a guest for team 4388 to browse batteries without needing an account.
 Push notifications currently work reliably on desktop browsers and Android (iOS Safari requires the site to be added to your home screen as a bookmark). You can test this by logging into -4388 (Yes, a negative. I needed a number that wouldn't have a real team).
 The AI scan/rules tools need a robot photo to test against; if you don't have one handy, any well-lit photo of mechanical/electrical components will still show you how the flow works.
@@ -420,7 +420,7 @@ Overall, I am so happy about this new design! Let me know what you guys think!
 I also added a folder for the photos so it looks more organized!
 The next thing I plan to work on "loop crashes if the camera disconnects" comment.
 
-Live app: https://mirage54321.github.io/RoboLens/
+Live app: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/image40.png)
 
@@ -431,17 +431,17 @@ Fixed the camera disconnect crash from the feedback. Turns out the camera plugin
 
 Fixed it by adding a listener that actually watches for that error state, cleans everything up, and drops the user onto a proper "Camera disconnected, try again" screen instead of freezing or throwing. Also fixed the retry logic after a failed capture so it doesn't try to restart a stream on a controller that's already dead. Next up: the cursor. Someone pointed that out, because every button on web just shows the default arrow.
 
-Live app: https://mirage54321.github.io/RoboLens/
+Live app: https://mirage54321.github.io/Marble/
 
 ![alt text](photos/IMG_9125.PNG)
 
 
 ## Post to Chief Delphi
-RoboLens Toolkit. AI robot inspection, rules checking, battery tracker, and live match stats
+Marble Toolkit. AI robot inspection, rules checking, battery tracker, and live match stats
 
 Hey everyone! I built a toolkit for FRC teams. It's still a prototype so I'm mainly looking for testing and feedback right now, but it is live on GitHub Pagess if you want to try it.
 
-https://mirage54321.github.io/RoboLens/
+https://mirage54321.github.io/Marble/
 
 There are four tools so far:
 
@@ -483,10 +483,10 @@ Updated the hint text to be upfront about limits
 
 P.S. not many commits on my GitHub right now because I remembered I can just run flutter build web locally to test changes instead of pushing every little tweak lol, so there's gonna be one big commit instead of 100 tiny ones.
 
-Also thinking about renaming since RoboLens is already taken by other stuff...
+Also thinking about renaming since Marble is already taken by other stuff...
 ![alt text](photos/image41.png)
 ![alt text](<photos/issue.jpeg>)
 
 
 ## Devlog #25 ->
-I tried searching up the name of my app for giggles and turns out a lot of things are named RoboLens. I spent this whole time changing the name to Marble. Kind of random I know. I'm a little sad but it's okay! I think I like this name more anyway.
+I tried searching up the name of my app for giggles and turns out a lot of things are named Marble. I spent this whole time changing the name to Marble. Kind of random I know. I'm a little sad but it's okay! I think I like this name more anyway.
